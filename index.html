@@ -438,23 +438,23 @@ li{margin-bottom:4px;line-height:1.5}
 /* Battle Feed */
 /* Event toast — single pill below D20, auto-fades */
 #eventToast{
-  position:fixed;bottom:220px;left:50%;transform:translateX(-50%) scale(.88);
+  position:fixed;bottom:70px;left:50%;transform:translateX(-50%);
   opacity:0;pointer-events:none;z-index:590;
-  background:var(--paper);border:1.5px solid rgba(255,255,255,.12);border-radius:10px;
-  padding:7px 18px;text-align:center;min-width:160px;max-width:85vw;
-  transition:all .15s;
+  background:rgba(6,8,20,.92);border:1px solid rgba(255,255,255,.1);border-radius:8px;
+  padding:5px 14px;text-align:center;max-width:80vw;
+  transition:opacity .15s;
 }
-#eventToast.show{transform:translateX(-50%) scale(1);opacity:1}
+#eventToast.show{opacity:1}
 .et-icon{font-size:1rem;line-height:1;display:block;margin-bottom:2px}
 .et-msg{font-family:'Share Tech Mono',monospace;font-size:.52rem;letter-spacing:.5px;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* D20 Toast */
 .d20-toast{
-  position:fixed;bottom:155px;left:50%;transform:translateX(-50%) scale(.85);
+  position:fixed;bottom:90px;right:10px;left:auto;transform:scale(.88);
   opacity:0;pointer-events:none;z-index:600;
   background:var(--paper);border:1.5px solid;border-radius:11px;
-  padding:9px 16px;text-align:center;min-width:130px;transition:all .17s;
+  padding:8px 13px;text-align:center;min-width:110px;max-width:140px;transition:all .17s;
 }
-.d20-toast.show{transform:translateX(-50%) scale(1);opacity:1}
+.d20-toast.show{transform:scale(1);opacity:1}
 .d20-who{font-family:'Share Tech Mono',monospace;font-size:.44rem;letter-spacing:2px;color:var(--mut);margin-bottom:2px}
 .d20-num{font-family:'Black Ops One',cursive;font-size:2.3rem;line-height:1}
 .d20-res{font-family:'Black Ops One',cursive;font-size:.7rem;letter-spacing:1px}
@@ -744,6 +744,55 @@ body.in-game{overflow:hidden;position:fixed;width:100%;height:100%}
 .ptok.p2{border-color:rgba(238,21,21,.7)}
 
 /* ── Damage float popup ── */
+
+/* ── Fainted popup ── */
+.faint-pop{
+  position:fixed;
+  pointer-events:none;
+  z-index:9998;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:1px;
+  animation:faintAnim 1.4s ease-out forwards;
+}
+.faint-pop-skull{
+  font-size:1.3rem;
+  line-height:1;
+  filter:drop-shadow(0 0 6px rgba(0,0,0,1));
+  animation:faintSkull .25s ease-out;
+}
+.faint-pop-name{
+  font-family:'Black Ops One',cursive;
+  font-size:.5rem;
+  letter-spacing:1.5px;
+  color:#fff;
+  text-shadow:0 0 8px rgba(0,0,0,1),0 1px 2px rgba(0,0,0,1);
+  white-space:nowrap;
+  background:rgba(0,0,0,.7);
+  border-radius:4px;
+  padding:1px 5px;
+}
+.faint-pop-label{
+  font-family:'Share Tech Mono',monospace;
+  font-size:.38rem;
+  letter-spacing:2px;
+  color:#f87171;
+  text-shadow:0 0 6px rgba(0,0,0,1);
+  text-transform:uppercase;
+}
+@keyframes faintAnim{
+  0%  {opacity:0;transform:translateY(0) scale(.6);}
+  12% {opacity:1;transform:translateY(-10px) scale(1.15);}
+  35% {opacity:1;transform:translateY(-18px) scale(1);}
+  75% {opacity:.9;transform:translateY(-34px) scale(.95);}
+  100%{opacity:0;transform:translateY(-52px) scale(.85);}
+}
+@keyframes faintSkull{
+  0%  {transform:scale(0) rotate(-20deg);}
+  60% {transform:scale(1.3) rotate(10deg);}
+  100%{transform:scale(1) rotate(0deg);}
+}
 .dmg-pop{
   position:fixed;
   pointer-events:none;
@@ -759,11 +808,12 @@ body.in-game{overflow:hidden;position:fixed;width:100%;height:100%}
 }
 .dmg-pop.heal{color:#22c55e;}
 .dmg-pop.tower{color:#f59e0b;font-size:.72rem;}
+.dmg-pop.tower-out{color:#2dd4bf;font-size:.68rem;}
 @keyframes dmgFloat{
-  0%  {opacity:1;transform:translateY(0) scale(1.2);}
-  20% {opacity:1;transform:translateY(-8px) scale(1);}
-  80% {opacity:.8;transform:translateY(-26px) scale(.9);}
-  100%{opacity:0;transform:translateY(-38px) scale(.8);}
+  0%  {opacity:1;transform:translateY(0) scale(1.3);}
+  15% {opacity:1;transform:translateY(-12px) scale(1.05);}
+  70% {opacity:1;transform:translateY(-32px) scale(.95);}
+  100%{opacity:0;transform:translateY(-48px) scale(.85);}
 }
 .ptok.frozen{border-color:#98d8d8!important;box-shadow:0 0 6px rgba(152,216,216,.5)}
 /* Status badges on tokens */
@@ -2654,8 +2704,10 @@ function flushDmgPops() {
     if (!el) return;
     var rect = el.getBoundingClientRect();
     var pop = document.createElement('div');
-    pop.className = 'dmg-pop' + (item.type === 'heal' ? ' heal' : item.type === 'tower' ? ' tower' : '');
-    pop.textContent = (item.type === 'heal' ? '+' : '−') + item.amount + 'w';
+    const typeClass = item.type === 'heal' ? ' heal' : item.type === 'tower' ? ' tower' : item.type === 'tower-out' ? ' tower-out' : '';
+    pop.className = 'dmg-pop' + typeClass;
+    const prefix = item.type === 'heal' ? '+' : item.type === 'tower-out' ? '−' : '−';
+    pop.textContent = prefix + item.amount + 'w';
     // Center on element, slight random horizontal offset for multiple hits
     var rx = (Math.random() - 0.5) * 20;
     pop.style.left = (rect.left + rect.width / 2 - 14 + rx) + 'px';
@@ -2666,6 +2718,32 @@ function flushDmgPops() {
   _dmgQueue = [];
 }
 
+
+function faintPop(u, side) {
+  // Find the token element by _uid, fire after next render via rAF
+  requestAnimationFrame(function() {
+    var el = document.querySelector('[data-uid="' + u._uid + '"]');
+    var rect = el ? el.getBoundingClientRect() : null;
+    // Even if el is gone (already removed from DOM), use last known position
+    // stored on the unit object, or default to center
+    if (!rect || (rect.width === 0 && rect.height === 0)) {
+      // Try to get a rough position from the board
+      var board = document.getElementById('playBoard');
+      rect = board ? board.getBoundingClientRect() : {left: window.innerWidth/2, top: window.innerHeight/2, width:0, height:0};
+    }
+    var pop = document.createElement('div');
+    pop.className = 'faint-pop';
+    var sprite = u.pid ? '<img src="' + spriteUrl(u.pid) + '" style="width:28px;height:28px;object-fit:contain;image-rendering:pixelated;filter:grayscale(1) brightness(.5);position:relative">' : '';
+    pop.innerHTML = '<div class="faint-pop-skull">☠</div>' +
+      '<div class="faint-pop-name">' + u.name + '</div>' +
+      '<div class="faint-pop-label">FAINTED</div>';
+    // Center on the token
+    pop.style.left = (rect.left + rect.width/2 - 35) + 'px';
+    pop.style.top  = (rect.top  + rect.height/2 - 10) + 'px';
+    document.body.appendChild(pop);
+    setTimeout(function() { if (pop.parentNode) pop.parentNode.removeChild(pop); }, 1450);
+  });
+}
 function gLogClear() { const el = document.getElementById('eventToast'); if(el) el.classList.remove('show'); }
 
 // ── D20 toast ─────────────────────────────────────
@@ -2676,7 +2754,7 @@ function showActionToast(msg, color) {
   if (!el) {
     el = document.createElement('div');
     el.id = 'actionToast';
-    el.style.cssText = 'position:fixed;top:50px;left:50%;transform:translateX(-50%);z-index:700;padding:7px 18px;border-radius:8px;font-family:Black Ops One,cursive;font-size:.7rem;letter-spacing:1px;background:rgba(6,8,15,.95);border:1.5px solid;pointer-events:none;transition:opacity .3s;white-space:nowrap;max-width:90vw;text-align:center';
+    el.style.cssText = 'position:fixed;top:52px;left:10px;right:auto;transform:none;z-index:700;padding:6px 12px;border-radius:8px;font-family:Black Ops One,cursive;font-size:.62rem;letter-spacing:1px;background:rgba(6,8,15,.95);border:1.5px solid;pointer-events:none;transition:opacity .3s;white-space:nowrap;max-width:55vw;text-align:left';
     document.body.appendChild(el);
   }
   el.textContent = msg;
@@ -2788,7 +2866,9 @@ function renderBoard() {
     const hp = tw.max - tw.w; const pct = hp / tw.max;
     const nc = tw.fallen ? 'rgba(255,255,255,.15)' : pct > 0.5 ? 'var(--blue)' : pct > 0.25 ? 'var(--gold)' : 'var(--red)';
     const st = tw.fallen ? 'dead' : pct > 0.5 ? 'ok' : pct > 0.25 ? 'warn' : 'crit';
-    return `<div class="tow-cell ${cls}${tw.fallen?' fallen':''}"><div class="tow-card ${st}" style="border-color:${nc}">
+    const laneKey = lbl.includes('A') ? 'a' : 'b';
+    const tuid = 'tower-' + cls + '-t' + laneKey.toUpperCase();
+    return `<div class="tow-cell ${cls}${tw.fallen?' fallen':''}"><div class="tow-card ${st}" style="border-color:${nc}" data-tuid="${tuid}">
       <span class="tow-ico">🏟</span>
       <div style="flex:1;min-width:0"><div class="tow-name">${lbl}${tw.fallen?' ☠':''}</div><div class="tow-lane">${tw.fallen?'FALLEN':'ACTIVE'}</div></div>
       <span class="tow-hp" style="color:${nc}">${tw.fallen?'X':hp}</span>
@@ -2799,8 +2879,9 @@ function renderBoard() {
     const exp = anyFallen && !dead;
     const nc = dead ? 'rgba(255,255,255,.15)' : exp ? 'var(--red)' : pct > 0.5 ? 'var(--gold)' : 'var(--or)';
     const st = dead ? 'dead' : exp ? 'exp' : anyFallen ? 'ok' : 'lock';
+    const tuid = 'tower-' + side + '-king';
     return `<div style="display:flex;justify-content:center;padding:5px 10px;${side==='p2'?'background:rgba(238,21,21,.03);border-bottom:1px solid rgba(255,255,255,.04)':'background:rgba(59,130,246,.03);border-top:1px solid rgba(255,255,255,.04)'}">
-      <div class="king-card ${st}" style="border-color:${nc}">
+      <div class="king-card ${st}" style="border-color:${nc}" data-tuid="${tuid}">
         <span class="king-ico">🏥</span>
         <div style="flex:1;min-width:0">
           <div class="king-name" style="color:${nc}">GYM LEADER ${dead?'☠':!anyFallen?'🔒':exp?'⚠':''}</div>
@@ -3484,6 +3565,7 @@ function checkKills() {
         const dead = arr.filter(u => u.w >= u.wounds);
         dead.forEach(u => {
           gLog('die', `☠ ${u.name} fainted!`);
+          faintPop(u, side);
           G.eliminated.push({ ...u, owner: side });
           const pas = u.passive || '';
           if (pas.startsWith('ON FAINT') || pas.startsWith('ON DEATH')) {
@@ -3521,7 +3603,14 @@ function doTowers() {
     // Trainer tower only reaches Neutral and Front zones (not Back)
     const tgts = (G[atSide].units['x'+lane]||[]).concat(G[atSide].units['f'+lane]||[]);
     if (!tgts.length) return;
-    tgts[0].w += 1; dmgPop(tgts[0]._uid, 1, 'dmg'); gLog('tow', `${lbl} → 1w to ${tgts[0].name}`); checkKills();
+    tgts[0].w += 1;
+    dmgPop(tgts[0]._uid, 1, 'dmg'); // pop on the unit hit
+    // Figure out which side owns this tower to show its tuid
+    const ownerSide = atSide === 'p1' ? 'p2' : 'p1';
+    const laneKey = lane.toUpperCase();
+    const twTuid = 'tower-' + ownerSide + '-t' + laneKey;
+    dmgPop(twTuid, 1, 'tower-out'); // pop on the tower that fired
+    gLog('tow', `${lbl} → 1w to ${tgts[0].name}`); checkKills();
   }
   gymFire(G.p2.tA, 'CPU Gym A', 'p1', 'a'); gymFire(G.p1.tA, 'Your Gym A', 'p2', 'a');
   gymFire(G.p2.tB, 'CPU Gym B', 'p1', 'b'); gymFire(G.p1.tB, 'Your Gym B', 'p2', 'b');
@@ -3538,7 +3627,10 @@ function doTowers() {
     // Prefer neutral/front in either lane, fall back to back
     const tgts = ['xa','fa','xb','fb','ba','bb'].flatMap(z => G[atSide].units[z]||[]);
     if (!tgts.length) return;
-    tgts[0].w += 2; dmgPop(tgts[0]._uid, 2, 'dmg'); gLog('tow', `${lbl} → 2w to ${tgts[0].name}`); checkKills();
+    tgts[0].w += 2;
+    dmgPop(tgts[0]._uid, 2, 'dmg');
+    dmgPop('tower-' + en + '-king', 2, 'tower-out'); // pop on the gym leader card that fired
+    gLog('tow', `${lbl} → 2w to ${tgts[0].name}`); checkKills();
     if (kg.w >= kg.max) kg.fallen = true;
   }
   kingFire('p1', 'CPU Gym Leader');
