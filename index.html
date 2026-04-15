@@ -169,6 +169,44 @@ li{margin-bottom:4px;line-height:1.5}
 .db-layout{display:grid;grid-template-columns:1fr 200px;gap:10px}
 @media(max-width:620px){.db-layout{grid-template-columns:1fr}}
 .pm-grid{display:flex;flex-wrap:wrap;gap:6px}
+
+/* ── Deck Builder split layout ── */
+#dbLayout{display:flex;gap:10px;align-items:flex-start}
+#dbPoolWrap{flex:1;min-width:0}
+#dbDeckPanel{
+  width:220px;flex-shrink:0;
+  background:var(--paper);border:1px solid var(--bdr);border-radius:12px;
+  position:sticky;top:68px;max-height:calc(100vh - 80px);overflow-y:auto;
+}
+@media(max-width:600px){
+  #dbLayout{flex-direction:column}
+  #dbDeckPanel{width:100%;position:static;max-height:none}
+}
+.deck-card-row{
+  display:flex;align-items:center;gap:7px;
+  padding:5px 10px;border-bottom:1px solid rgba(255,255,255,.05);
+  cursor:pointer;transition:background .12s;
+}
+.deck-card-row:hover{background:rgba(255,255,255,.04)}
+.deck-card-row:last-child{border-bottom:none}
+.deck-card-row .dc-art{
+  width:30px;height:30px;border-radius:4px;overflow:hidden;
+  background:#0a0a18;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+}
+.deck-card-row .dc-art img{width:100%;height:100%;object-fit:contain;image-rendering:pixelated}
+.deck-card-row .dc-info{flex:1;min-width:0}
+.deck-card-row .dc-name{font-family:'Black Ops One',cursive;font-size:.48rem;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.deck-card-row .dc-sub{font-size:.4rem;color:var(--soft);margin-top:1px}
+.deck-card-row .dc-el{font-family:'Black Ops One',cursive;font-size:.5rem;color:var(--gold);flex-shrink:0}
+.deck-card-row .dc-rm{font-size:.7rem;color:var(--red);opacity:.6;flex-shrink:0;padding:2px 4px;background:none;border:none;cursor:pointer;line-height:1}
+.deck-card-row .dc-rm:hover{opacity:1}
+.deck-empty{padding:18px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:.48rem;color:var(--mut);letter-spacing:1px}
+.deck-panel-hdr{padding:10px 12px 6px;border-bottom:1px solid rgba(255,255,255,.07)}
+.deck-panel-hdr-title{font-family:'Black Ops One',cursive;font-size:.65rem;letter-spacing:1px}
+.deck-panel-hdr-sub{font-family:'Share Tech Mono',monospace;font-size:.42rem;color:var(--mut);margin-top:2px;letter-spacing:1px}
+.deck-count-pip{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;font-family:'Black Ops One',cursive;font-size:.38rem;margin-left:2px}
+.dc-count-2{color:var(--gold)}
+
 .pm{
   width:72px;height:116px;border-radius:7px;position:relative;
   overflow:hidden;cursor:pointer;border:2px solid var(--bdr);
@@ -594,6 +632,29 @@ body.in-game{overflow:hidden;position:fixed;width:100%;height:100%}
 }
 .ptok.p1{border-color:rgba(59,130,246,.7)}
 .ptok.p2{border-color:rgba(238,21,21,.7)}
+
+/* ── Damage float popup ── */
+.dmg-pop{
+  position:fixed;
+  pointer-events:none;
+  font-family:'Black Ops One',cursive;
+  font-size:.78rem;
+  font-weight:900;
+  color:#ff4444;
+  text-shadow:0 0 6px rgba(0,0,0,.9),0 1px 2px rgba(0,0,0,1);
+  z-index:9999;
+  animation:dmgFloat 1s ease-out forwards;
+  white-space:nowrap;
+  letter-spacing:1px;
+}
+.dmg-pop.heal{color:#22c55e;}
+.dmg-pop.tower{color:#f59e0b;font-size:.72rem;}
+@keyframes dmgFloat{
+  0%  {opacity:1;transform:translateY(0) scale(1.2);}
+  20% {opacity:1;transform:translateY(-8px) scale(1);}
+  80% {opacity:.8;transform:translateY(-26px) scale(.9);}
+  100%{opacity:0;transform:translateY(-38px) scale(.8);}
+}
 .ptok.frozen{border-color:#98d8d8!important;box-shadow:0 0 6px rgba(152,216,216,.5)}
 /* Status badges on tokens */
 .tok-status{
@@ -756,59 +817,76 @@ body.in-game{overflow:hidden;position:fixed;width:100%;height:100%}
 
 <!-- ═══ DECK BUILDER ═══ -->
 <div class="pg" id="pg-deck"><div class="wrap">
-<div class="sec" style="--acc:var(--gold)">
-  <h1>🃏 <em>Deck Builder</em> <span style="font-size:.6rem;color:var(--mut);font-family:'Share Tech Mono',monospace;letter-spacing:2px">v1.4</span></h1>
-  <div class="tag">16 cards · Max 2 copies · Build player &amp; opponent decks</div>
+
+<!-- Header -->
+<div class="sec" style="--acc:var(--gold);padding-bottom:10px">
+  <h1>🃏 <em>Deck Builder</em></h1>
+  <div class="tag">16 cards · Max 2 copies per card · Tap a card to add · Tap deck to remove</div>
+  <!-- Editing toggle -->
+  <div style="display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap">
+    <div id="dbEditingLabel" style="font-family:'Black Ops One',cursive;font-size:.68rem;letter-spacing:1px;color:var(--blue)">🔵 PLAYER DECK</div>
+    <button onclick="dbToggleEditing()" id="dbToggleBtn" style="padding:4px 12px;background:rgba(238,21,21,.12);border:1px solid rgba(238,21,21,.3);border-radius:10px;color:var(--red);font-family:'Black Ops One',cursive;font-size:.48rem;cursor:pointer">Switch to 🔴 Opponent</button>
+  </div>
 </div>
 
-<!-- TOP PANEL: deck status + saved slots -->
-<div class="sec" style="--acc:var(--blue);padding-bottom:12px">
-  <!-- Editing toggle + count + actions row -->
-  <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+<!-- Saved Slots row -->
+<div class="sec" style="--acc:var(--blue);padding:10px 14px">
+  <div style="display:flex;gap:12px;flex-wrap:wrap">
     <div style="flex:1;min-width:0">
-      <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px;flex-wrap:wrap">
-        <div id="dbEditingLabel" style="font-family:'Black Ops One',cursive;font-size:.72rem;letter-spacing:1px;color:var(--blue)">🔵 EDITING: PLAYER DECK</div>
-        <button onclick="dbToggleEditing()" id="dbToggleBtn" style="padding:3px 10px;background:rgba(238,21,21,.1);border:1px solid rgba(238,21,21,.3);border-radius:10px;color:var(--red);font-family:'Black Ops One',cursive;font-size:.46rem;cursor:pointer;white-space:nowrap">Switch → 🔴 Opponent</button>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-        <div class="dp-count" id="dbCount" style="margin:0;font-size:.85rem">0 <span style="font-size:.6rem;color:var(--soft);font-family:Nunito,sans-serif;font-weight:600">/ 16</span></div>
-        <div id="dbReqs" style="display:flex;gap:3px;flex-wrap:wrap;align-items:center"></div>
-      </div>
+      <div style="font-family:'Share Tech Mono',monospace;font-size:.44rem;letter-spacing:2px;color:var(--blue);margin-bottom:5px">🔵 PLAYER DECKS</div>
+      <div id="dbPlayerSlots"></div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:4px;width:108px">
-      <button onclick="dbSave()" style="width:100%;padding:7px 6px;background:rgba(255,203,5,.1);border:1px solid rgba(255,203,5,.28);border-radius:6px;color:var(--gold);font-family:'Black Ops One',cursive;font-size:.58rem;cursor:pointer">💾 SAVE</button>
-      <button onclick="dbRandomize()" style="width:100%;padding:7px 6px;background:rgba(112,56,248,.12);border:1px solid rgba(112,56,248,.3);border-radius:6px;color:#a080f8;font-family:'Black Ops One',cursive;font-size:.58rem;cursor:pointer">🎲 RANDOM</button>
-      <button onclick="dbClear()" style="width:100%;padding:5px 6px;background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:6px;color:var(--soft);font-family:'Black Ops One',cursive;font-size:.52rem;cursor:pointer">✕ CLEAR</button>
+    <div style="flex:1;min-width:0">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:.44rem;letter-spacing:2px;color:var(--red);margin-bottom:5px">🔴 OPPONENT DECKS</div>
+      <div id="dbCpuSlots"></div>
     </div>
-  </div>
-  <!-- Player saved slots -->
-  <div style="margin-bottom:8px">
-    <div style="font-family:'Share Tech Mono',monospace;font-size:.46rem;letter-spacing:2px;color:var(--blue);margin-bottom:4px;text-transform:uppercase">🔵 Player Decks</div>
-    <div id="dbPlayerSlots"></div>
-  </div>
-  <!-- Opponent saved slots -->
-  <div>
-    <div style="font-family:'Share Tech Mono',monospace;font-size:.46rem;letter-spacing:2px;color:var(--red);margin-bottom:4px;text-transform:uppercase">🔴 Opponent Decks</div>
-    <div id="dbCpuSlots"></div>
   </div>
 </div>
 
-<!-- CARD POOL -->
-<div class="sec" style="--acc:var(--el)">
-  <div class="stabs" id="dbTabs" style="margin-bottom:8px">
-    <button class="stab all on"   onclick="setDbType('all',this)">ALL</button>
-    <button class="stab fire"     onclick="setDbType('fire',this)">🔥</button>
-    <button class="stab water"    onclick="setDbType('water',this)">💧</button>
-    <button class="stab grass"    onclick="setDbType('grass',this)">🌿</button>
-    <button class="stab electric" onclick="setDbType('electric',this)">⚡</button>
-    <button class="stab psychic"  onclick="setDbType('psychic',this)">🔮</button>
-    <button class="stab fighting" onclick="setDbType('fighting',this)">🥊</button>
-    <button class="stab ghost"    onclick="setDbType('ghost',this)">👻</button>
-    <button class="stab poison"   onclick="setDbType('poison',this)">☠</button>
-    <button class="stab normal"   onclick="setDbType('normal',this)">⬜</button>
-    <button class="stab trainer"  onclick="setDbType('trainer',this)">🎒</button>
+<!-- Split layout: card pool + deck panel -->
+<div id="dbLayout">
+
+  <!-- LEFT: Card pool -->
+  <div id="dbPoolWrap">
+    <div class="sec" style="--acc:var(--el);padding-bottom:10px">
+      <!-- Type tabs -->
+      <div class="stabs" id="dbTabs" style="margin-bottom:8px;flex-wrap:wrap">
+        <button class="stab all on"   onclick="setDbType('all',this)">ALL</button>
+        <button class="stab fire"     onclick="setDbType('fire',this)">🔥</button>
+        <button class="stab water"    onclick="setDbType('water',this)">💧</button>
+        <button class="stab grass"    onclick="setDbType('grass',this)">🌿</button>
+        <button class="stab electric" onclick="setDbType('electric',this)">⚡</button>
+        <button class="stab psychic"  onclick="setDbType('psychic',this)">🔮</button>
+        <button class="stab fighting" onclick="setDbType('fighting',this)">🥊</button>
+        <button class="stab ghost"    onclick="setDbType('ghost',this)">👻</button>
+        <button class="stab poison"   onclick="setDbType('poison',this)">☠</button>
+        <button class="stab normal"   onclick="setDbType('normal',this)">⬜</button>
+        <button class="stab trainer"  onclick="setDbType('trainer',this)">🎒</button>
+        <button class="stab energy"   onclick="setDbType('energy',this)">⚡ Energy</button>
+      </div>
+      <div class="pm-grid" id="dbPool"></div>
+    </div>
   </div>
-  <div class="pm-grid" id="dbPool"></div>
+
+  <!-- RIGHT: Deck panel -->
+  <div id="dbDeckPanel">
+    <div class="deck-panel-hdr">
+      <div class="deck-panel-hdr-title" id="dbPanelTitle" style="color:var(--blue)">🔵 Your Deck</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px">
+        <div class="deck-panel-hdr-sub" id="dbCount">0 / 16</div>
+        <div id="dbReqs" style="display:flex;gap:2px;flex-wrap:wrap;align-items:center"></div>
+      </div>
+      <!-- Actions -->
+      <div style="display:flex;gap:4px;margin-top:7px">
+        <button onclick="dbSave()" style="flex:1;padding:6px 4px;background:rgba(255,203,5,.1);border:1px solid rgba(255,203,5,.28);border-radius:6px;color:var(--gold);font-family:'Black Ops One',cursive;font-size:.5rem;cursor:pointer">💾 Save</button>
+        <button onclick="dbRandomize()" style="flex:1;padding:6px 4px;background:rgba(112,56,248,.12);border:1px solid rgba(112,56,248,.3);border-radius:6px;color:#a080f8;font-family:'Black Ops One',cursive;font-size:.5rem;cursor:pointer">🎲 Random</button>
+        <button onclick="dbClear()" style="flex:1;padding:6px 4px;background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:6px;color:var(--soft);font-family:'Black Ops One',cursive;font-size:.5rem;cursor:pointer">✕ Clear</button>
+      </div>
+    </div>
+    <!-- Deck card list -->
+    <div id="dbDeckList"></div>
+  </div>
+
 </div>
 </div></div>
 <!-- ═══ VS CPU — game fills entire screen, nav hidden ═══ -->
@@ -1095,7 +1173,7 @@ const CARDS = [
 {id:'f06',pid:58, name:'GROWLITHE',  ptype:'fire',gtype:'Physical',rarity:'common', elixir:2,wounds:2,speed:'⚡', passive:null,
  cs:'Roll D6. On 4+: +1w bonus.',quote:'Very protective of its territory. Never alone.'},
 
-{id:'f07',pid:59, name:'ARCANINE',   ptype:'fire',gtype:'Physical',rarity:'epic',   elixir:5,wounds:6,speed:'⚡',
+{id:'f07',pid:59, name:'ARCANINE',   ptype:'fire',gtype:'Special',rarity:'epic',   elixir:5,wounds:6,speed:'⚡',
  passive:'ON DEPLOY: All your Physical allies in this lane advance 1 row.',
  cs:'+3w to target AND advance 1 extra row.',quote:'Legendary speed. One of the noble Pokémon.'},
 
@@ -1108,7 +1186,7 @@ const CARDS = [
 {id:'f10',pid:126,name:'MAGMAR',     ptype:'fire',gtype:'Physical',rarity:'rare',   elixir:4,wounds:4,speed:'🧍',passive:null,
  cs:'+2w AND +1w to one other enemy in zone.',quote:'Its body temperature can reach 2200°F.'},
 
-{id:'f11',pid:136,name:'FLAREON',    ptype:'fire',gtype:'Physical',rarity:'rare',   elixir:4,wounds:4,speed:'🧍',passive:null,
+{id:'f11',pid:136,name:'FLAREON',    ptype:'fire',gtype:'Special',rarity:'rare',   elixir:4,wounds:4,speed:'🧍',passive:null,
  cs:'+3w to target. Flare-Up: Flareon always burns bright.',quote:'Body temperature over 1650°F.'},
 
 {id:'f12',pid:146,name:'MOLTRES',    ptype:'fire',gtype:'Flying',  rarity:'legend', elixir:8,wounds:7,speed:'🐢',
@@ -1149,7 +1227,7 @@ const CARDS = [
 {id:'w11',pid:79, name:'SLOWPOKE',   ptype:'water',gtype:'Physical',rarity:'common', elixir:3,wounds:3,speed:'🐢',passive:null,
  cs:'Roll D6. On 4+: +1w bonus (it eventually hits).',quote:'Dips its tail in water and waits for fish.'},
 
-{id:'w12',pid:80, name:'SLOWBRO',    ptype:'water',gtype:'Physical',rarity:'rare',   elixir:5,wounds:5,speed:'🐢',passive:null,
+{id:'w12',pid:80, name:'SLOWBRO',    ptype:'water',gtype:'Special',rarity:'rare',   elixir:5,wounds:5,speed:'🐢',passive:null,
  cs:'+2w. Slowbro forgot how to feel shock.',quote:'The shellder injected its muscles with poison.'},
 
 {id:'w13',pid:86, name:'SEEL',       ptype:'water',gtype:'Physical',rarity:'common', elixir:2,wounds:2,speed:'🧍',passive:null,
@@ -1183,7 +1261,7 @@ const CARDS = [
 {id:'w22',pid:119,name:'SEAKING',    ptype:'water',gtype:'Physical',rarity:'rare',   elixir:4,wounds:4,speed:'⚡', passive:null,
  cs:'+2w. Horn Drill: roll D6, on 6 target instantly faints.',quote:'During mating season it has a gold-tinted body.'},
 
-{id:'w23',pid:120,name:'STARYU',     ptype:'water',gtype:'Physical',rarity:'common', elixir:2,wounds:2,speed:'⚡', passive:null,
+{id:'w23',pid:120,name:'STARYU',     ptype:'water',gtype:'Special',rarity:'common', elixir:2,wounds:2,speed:'⚡', passive:null,
  cs:'Recover — heal 1w off your most wounded ally.',quote:'Regenerates its body when parts are cut off.'},
 
 {id:'w24',pid:121,name:'STARMIE',    ptype:'water',gtype:'Special', rarity:'rare',   elixir:5,wounds:4,speed:'⚡', passive:null,
@@ -1193,10 +1271,10 @@ const CARDS = [
  passive:'ON DEPLOY: Deal 1w to all enemies in zone.',
  cs:'Hyper Beam — +4w. Skip your next attack (recharge).',quote:'Once it begins to rampage, it will not stop.'},
 
-{id:'w26',pid:131,name:'LAPRAS',     ptype:'water',gtype:'Physical',rarity:'epic',   elixir:6,wounds:6,speed:'🐢',passive:null,
+{id:'w26',pid:131,name:'LAPRAS',     ptype:'water',gtype:'Special',rarity:'epic',   elixir:6,wounds:6,speed:'🐢',passive:null,
  cs:'+2w AND freeze all enemies in zone for 1 turn.',quote:'A gentle giant that ferries people across water.'},
 
-{id:'w27',pid:134,name:'VAPOREON',   ptype:'water',gtype:'Physical',rarity:'rare',   elixir:4,wounds:4,speed:'🧍',
+{id:'w27',pid:134,name:'VAPOREON',   ptype:'water',gtype:'Special',rarity:'rare',   elixir:4,wounds:4,speed:'🧍',
  passive:'ON DEPLOY: Heal 1w off your most wounded ally.',
  cs:'Aqua Ring — heal 1w off self at start of next turn.',quote:'Its cellular structure is similar to water molecules.'},
 
@@ -1254,7 +1332,7 @@ const CARDS = [
  passive:'ON FAINT: Spawn 2 Exeggcute tokens (1w Fast) in Back row.',
  cs:'Roll D6. On 4+: +1w bonus.',quote:'Though it looks like eggs, it is actually a plant.'},
 
-{id:'g13',pid:103,name:'EXEGGUTOR', ptype:'grass',gtype:'Physical',rarity:'rare',   elixir:5,wounds:5,speed:'🐢',
+{id:'g13',pid:103,name:'EXEGGUTOR', ptype:'grass',gtype:'Special',rarity:'rare',   elixir:5,wounds:5,speed:'🐢',
  passive:'ON FAINT: +1w to every enemy in same zone.',
  cs:'+2w AND push target back 1 row.',quote:'Each of its three heads thinks different thoughts.'},
 
@@ -1262,10 +1340,10 @@ const CARDS = [
  cs:'Constrict — +2w AND target cannot advance next turn.',quote:'Blue vines all over its body.'},
 
 // ══ ELECTRIC ══
-{id:'e01',pid:25, name:'PIKACHU',    ptype:'electric',gtype:'Physical',rarity:'legend', elixir:4,wounds:4,speed:'⚡',passive:null,
+{id:'e01',pid:25, name:'PIKACHU',    ptype:'electric',gtype:'Special',rarity:'epic',   elixir:4,wounds:4,speed:'⚡',passive:null,
  cs:'Thunderbolt — +3w AND +1w to all adjacent enemies.',quote:'Electricity-storing pouches on its cheeks.'},
 
-{id:'e02',pid:26, name:'RAICHU',     ptype:'electric',gtype:'Physical',rarity:'epic',   elixir:4,wounds:4,speed:'⚡',passive:null,
+{id:'e02',pid:26, name:'RAICHU',     ptype:'electric',gtype:'Special',rarity:'epic',   elixir:4,wounds:4,speed:'⚡',passive:null,
  cs:'+3w. Tail discharges electricity to protect it.',quote:'Its tail discharges electricity into the ground.'},
 
 {id:'e03',pid:81, name:'MAGNEMITE',  ptype:'electric',gtype:'Stadium', rarity:'common', elixir:2,wounds:2,speed:null, passive:null,
@@ -1274,18 +1352,18 @@ const CARDS = [
 {id:'e04',pid:82, name:'MAGNETON',   ptype:'electric',gtype:'Stadium', rarity:'rare',   elixir:4,wounds:4,speed:null, passive:null,
  cs:'+2w to one target anywhere on the board.',quote:'Formed by three Magnemite linked together.'},
 
-{id:'e05',pid:100,name:'VOLTORB',    ptype:'electric',gtype:'Physical',rarity:'common', elixir:2,wounds:2,speed:'⚡',
+{id:'e05',pid:100,name:'VOLTORB',    ptype:'electric',gtype:'Special',rarity:'common', elixir:2,wounds:2,speed:'⚡',
  passive:'ON FAINT: Self-Destruct — +3w to all enemies in same zone.',
  cs:'Roll D6. On 4+: Self-Destruct now — +2w all in zone.',quote:'Rolls around and explodes. Looks like a Poké Ball.'},
 
-{id:'e06',pid:101,name:'ELECTRODE',  ptype:'electric',gtype:'Physical',rarity:'rare',   elixir:3,wounds:3,speed:'⚡',
+{id:'e06',pid:101,name:'ELECTRODE',  ptype:'electric',gtype:'Special',rarity:'rare',   elixir:3,wounds:3,speed:'⚡',
  passive:'ON FAINT: Explosion — +4w to all enemies in same zone.',
  cs:'EXPLOSION — +3w all in zone. Electrode is eliminated.',quote:'The faster it stores electricity, the angrier it gets.'},
 
-{id:'e07',pid:125,name:'ELECTABUZZ', ptype:'electric',gtype:'Physical',rarity:'rare',   elixir:4,wounds:4,speed:'🧍',passive:null,
+{id:'e07',pid:125,name:'ELECTABUZZ', ptype:'electric',gtype:'Special',rarity:'rare',   elixir:4,wounds:4,speed:'🧍',passive:null,
  cs:'+2w AND +1w to all others in zone.',quote:'Competes to scale tall trees during storms.'},
 
-{id:'e08',pid:135,name:'JOLTEON',    ptype:'electric',gtype:'Physical',rarity:'rare',   elixir:3,wounds:3,speed:'⚡',passive:null,
+{id:'e08',pid:135,name:'JOLTEON',    ptype:'electric',gtype:'Special',rarity:'rare',   elixir:3,wounds:3,speed:'⚡',passive:null,
  cs:'+2w. Roll D6: on 4+ hit a second target for +1w.',quote:'Blasts 10,000-volt lightning bolts.'},
 
 {id:'e09',pid:145,name:'ZAPDOS',     ptype:'electric',gtype:'Flying',  rarity:'legend', elixir:8,wounds:7,speed:'⚡',
@@ -1306,10 +1384,10 @@ const CARDS = [
 {id:'p03',pid:65, name:'ALAKAZAM',   ptype:'psychic',gtype:'Special', rarity:'epic',   elixir:5,wounds:4,speed:'⚡',passive:null,
  cs:'+3w AND freeze one other enemy in zone.',quote:'Its brain can outperform a supercomputer.'},
 
-{id:'p04',pid:96, name:'DROWZEE',    ptype:'psychic',gtype:'Physical',rarity:'common', elixir:2,wounds:3,speed:'🐢',passive:null,
+{id:'p04',pid:96, name:'DROWZEE',    ptype:'psychic',gtype:'Special',rarity:'common', elixir:2,wounds:3,speed:'🐢',passive:null,
  cs:'Hypnosis — freeze target for 1 turn.',quote:'Puts enemies to sleep then dreams about them.'},
 
-{id:'p05',pid:97, name:'HYPNO',      ptype:'psychic',gtype:'Physical',rarity:'rare',   elixir:4,wounds:4,speed:'🧍',passive:null,
+{id:'p05',pid:97, name:'HYPNO',      ptype:'psychic',gtype:'Special',rarity:'rare',   elixir:4,wounds:4,speed:'🧍',passive:null,
  cs:'Hypnosis — freeze 2 enemies in zone for 1 turn.',quote:'The pendulum steals your dreams.'},
 
 {id:'p06',pid:122,name:'MR. MIME',   ptype:'psychic',gtype:'Special', rarity:'rare',   elixir:4,wounds:3,speed:'🧍',
@@ -1359,7 +1437,7 @@ const CARDS = [
 {id:'gh02',pid:93, name:'HAUNTER',   ptype:'ghost',gtype:'Special', rarity:'rare',   elixir:3,wounds:3,speed:'⚡',passive:null,
  cs:'Lick — +2w AND freeze target for 1 turn.',quote:'Licks with its gaseous tongue.'},
 
-{id:'gh03',pid:94, name:'GENGAR',    ptype:'ghost',gtype:'Special', rarity:'legend', elixir:6,wounds:6,speed:'⚡',passive:null,
+{id:'gh03',pid:94, name:'GENGAR',    ptype:'ghost', gtype:'Special', rarity:'legend', elixir:7,wounds:6,speed:'⚡',passive:null,
  cs:'Shadow Ball — +4w AND one other enemy takes +1w.',quote:'Cools the area by nearly 10 degrees.'},
 
 // ══ POISON ══
@@ -1414,7 +1492,7 @@ const CARDS = [
 {id:'n08',pid:39, name:'JIGGLYPUFF', ptype:'normal',gtype:'Physical',rarity:'rare',   elixir:3,wounds:4,speed:'🧍',passive:null,
  cs:'Sing — freeze all enemies in zone for 1 turn.',quote:'Its song puts everyone around it to sleep.'},
 
-{id:'n09',pid:40, name:'WIGGLYTUFF', ptype:'normal',gtype:'Physical',rarity:'rare',   elixir:4,wounds:4,speed:'🧍',
+{id:'n09',pid:40, name:'WIGGLYTUFF', ptype:'normal',gtype:'Stadium',rarity:'rare',   elixir:4,wounds:4,speed:'🧍',
  passive:'ON DEPLOY: Sing — freeze one enemy in zone.',
  cs:'+2w AND freeze all enemies in zone.',quote:'Its fur is so fine and soft, it will put you to sleep.'},
 
@@ -1454,7 +1532,7 @@ const CARDS = [
 {id:'n20',pid:133,name:'EEVEE',      ptype:'normal',gtype:'Physical',rarity:'common', elixir:2,wounds:2,speed:'⚡',passive:null,
  cs:'Roll D6. On 4+: +1w bonus.',quote:'Its genetic code is irregular and unstable.'},
 
-{id:'n21',pid:143,name:'SNORLAX',    ptype:'normal',gtype:'Physical',rarity:'legend', elixir:4,wounds:8,speed:'🐢',
+{id:'n21',pid:143,name:'SNORLAX',    ptype:'normal', gtype:'Stadium', rarity:'epic',   elixir:6,wounds:7,speed:null,
  passive:'ON DEPLOY: Block — cannot advance. Enemies must destroy it to pass.',
  cs:'Body Slam — +3w to ALL enemies in this zone.',quote:'Not satisfied unless it eats over 900 pounds a day.'},
 
@@ -1477,23 +1555,23 @@ const CARDS = [
 {id:'r06',pid:75, name:'GRAVELER',   ptype:'rock',gtype:'Physical',rarity:'rare',   elixir:4,wounds:4,speed:'🐢',passive:null,
  cs:'+2w AND push target back 1 row (Roll).',quote:'Rolls down slopes without a care.'},
 
-{id:'r07',pid:76, name:'GOLEM',      ptype:'rock',gtype:'Physical',rarity:'epic',   elixir:6,wounds:8,speed:'🐢',
+{id:'r07',pid:76, name:'GOLEM',      ptype:'rock',gtype:'Stadium',rarity:'epic',   elixir:6,wounds:8,speed:'🐢',
  passive:'ON FAINT: +2w to every other card in this row, both sides.',
  cs:'+2w AND push target back 1 row.',quote:'It sheds its skin every year.'},
 
-{id:'r08',pid:95, name:'ONIX',       ptype:'rock',gtype:'Physical',rarity:'rare',   elixir:4,wounds:5,speed:'🧍',passive:null,
+{id:'r08',pid:95, name:'ONIX',       ptype:'rock',gtype:'Stadium',rarity:'rare',   elixir:4,wounds:5,speed:'🧍',passive:null,
  cs:'+2w AND all enemies take +1w next turn (Bind).',quote:'As it grows, the stone portions become rounder.'},
 
 {id:'r09',pid:104,name:'CUBONE',     ptype:'rock',gtype:'Physical',rarity:'common', elixir:2,wounds:2,speed:'🧍',passive:null,
  cs:'Roll D6. On 4+: +1w bonus.',quote:'Wears the skull of its dead mother.'},
 
-{id:'r10',pid:105,name:'MAROWAK',    ptype:'rock',gtype:'Physical',rarity:'rare',   elixir:4,wounds:4,speed:'🧍',passive:null,
+{id:'r10',pid:105,name:'MAROWAK',    ptype:'rock',gtype:'Stadium',rarity:'rare',   elixir:4,wounds:4,speed:'🧍',passive:null,
  cs:'+3w to target. Bone Club ignores defense.',quote:'A skull Pokémon. Wields a bone as a lethal weapon.'},
 
 {id:'r11',pid:111,name:'RHYHORN',    ptype:'rock',gtype:'Physical',rarity:'rare',   elixir:4,wounds:5,speed:'🐢',passive:null,
  cs:'+2w AND push all enemies in zone back 1 row.',quote:'One-track mind. Extremely inattentive.'},
 
-{id:'r12',pid:112,name:'RHYDON',     ptype:'rock',gtype:'Physical',rarity:'epic',   elixir:6,wounds:7,speed:'🐢',
+{id:'r12',pid:112,name:'RHYDON',     ptype:'rock',gtype:'Stadium',rarity:'epic',   elixir:6,wounds:7,speed:'🐢',
  passive:'ON DEPLOY: Horn Drill — deal 1w to all enemies in zone.',
  cs:'+3w AND push target back 1 row.',quote:'Its rhino horn can bore through diamond.'},
 
@@ -1516,7 +1594,7 @@ const CARDS = [
  cs:'Hyper Beam — +5w. No D20 needed.',quote:'Its wings become more powerful the longer it flies.'},
 
 // ══ FLYING ONLY ══
-{id:'fly01',pid:142,name:'AERODACTYL',ptype:'rock',gtype:'Flying',  rarity:'legend', elixir:6,wounds:5,speed:'⚡',
+{id:'fly01',pid:142,name:'AERODACTYL',ptype:'rock', gtype:'Flying',  rarity:'legend', elixir:7,wounds:6,speed:'⚡',
  passive:'ON DEPLOY: Sonic Boom — deal 1w to all enemies in zone.',
  cs:'+3w AND advance 1 row. Screech: all enemies -1w threshold.',quote:'A primeval Pokémon resurrected from old amber.'},
 
@@ -1575,6 +1653,29 @@ const CARDS = [
 
 {id:'t18',pid:null,name:'POKÉ FLUTE',   ptype:'trainer',gtype:'Trainer',rarity:'epic',   elixir:5,wounds:null,speed:null,passive:null,
  cs:'Wake all frozen allies AND deal 2w to all enemies in chosen lane.',quote:'A flute that wakes Pokémon from deep sleep.'},
+
+
+// ══ ENERGY CARDS ══
+{id:'en01',pid:null,name:'FIRE ENERGY',    ptype:'energy',gtype:'Trainer',rarity:'common', elixir:1,wounds:null,speed:null,passive:null,
+ cs:'Gain +1 Elixir immediately when played.',quote:'Powers Fire-type attacks.'},
+
+{id:'en02',pid:null,name:'WATER ENERGY',   ptype:'energy',gtype:'Trainer',rarity:'common', elixir:1,wounds:null,speed:null,passive:null,
+ cs:'Gain +1 Elixir immediately when played.',quote:'Powers Water-type attacks.'},
+
+{id:'en03',pid:null,name:'GRASS ENERGY',   ptype:'energy',gtype:'Trainer',rarity:'common', elixir:1,wounds:null,speed:null,passive:null,
+ cs:'Gain +1 Elixir immediately when played.',quote:'Powers Grass-type attacks.'},
+
+{id:'en04',pid:null,name:'ELECTRIC ENERGY',ptype:'energy',gtype:'Trainer',rarity:'common', elixir:1,wounds:null,speed:null,passive:null,
+ cs:'Gain +1 Elixir immediately when played.',quote:'Powers Electric-type attacks.'},
+
+{id:'en05',pid:null,name:'PSYCHIC ENERGY', ptype:'energy',gtype:'Trainer',rarity:'common', elixir:1,wounds:null,speed:null,passive:null,
+ cs:'Gain +1 Elixir immediately when played.',quote:'Powers Psychic-type attacks.'},
+
+{id:'en06',pid:null,name:'FIGHTING ENERGY',ptype:'energy',gtype:'Trainer',rarity:'common', elixir:1,wounds:null,speed:null,passive:null,
+ cs:'Gain +1 Elixir immediately when played.',quote:'Powers Fighting-type attacks.'},
+
+{id:'en07',pid:null,name:'DOUBLE COLORLESS',ptype:'energy',gtype:'Trainer',rarity:'rare',  elixir:2,wounds:null,speed:null,passive:null,
+ cs:'Gain +2 Elixir immediately when played.',quote:'Provides 2 colorless energy at once.'},
 
 ]; // end CARDS
 
@@ -1792,6 +1893,7 @@ function dbToggleEditing() {
     if (btn) { btn.textContent = 'Switch → 🔵 Player'; btn.style.color = 'var(--blue)'; btn.style.borderColor = 'rgba(59,130,246,.3)'; btn.style.background = 'rgba(59,130,246,.1)'; }
   }
   renderDB();
+  dbRenderDeckList();
 }
 
 function setDbType(t, btn) {
@@ -1800,46 +1902,99 @@ function setDbType(t, btn) {
   btn.classList.add('on');
   renderDB();
 }
+
+function dbRenderDeckList() {
+  const el = document.getElementById('dbDeckList');
+  if (!el) return;
+  const col = DB_EDITING === 'player' ? 'var(--blue)' : 'var(--red)';
+  // Update panel title
+  const pt = document.getElementById('dbPanelTitle');
+  if (pt) { pt.textContent = DB_EDITING === 'player' ? '🔵 Your Deck' : '🔴 Opponent Deck'; pt.style.color = col; }
+  if (!deck.length) {
+    el.innerHTML = '<div class="deck-empty">No cards yet.<br>Tap cards to add them.</div>';
+    return;
+  }
+  // Group by card id to show ×2 counts
+  const grouped = [];
+  const seen = {};
+  deck.forEach(c => {
+    if (seen[c.id]) { seen[c.id].count++; }
+    else { const entry = {card:c, count:1}; seen[c.id] = entry; grouped.push(entry); }
+  });
+  el.innerHTML = grouped.map((g, gi) => {
+    const c = g.card;
+    const artH = c.pid ? `<img src="${spriteUrl(c.pid)}" alt="${c.name}" loading="lazy" onerror="this.style.display='none'">` : '🎴';
+    const rarCol = {common:'#78909c',rare:'#42a5f5',epic:'#ce93d8',legend:'var(--gold)'}[c.rarity]||'#fff';
+    return `<div class="deck-card-row" title="Click to remove one copy">
+      <div class="dc-art">${c.pid ? `<img src="${spriteUrl(c.pid)}" loading="lazy" style="width:100%;height:100%;object-fit:contain;image-rendering:pixelated">` : '<span style="font-size:.7rem">🎴</span>'}</div>
+      <div class="dc-info">
+        <div class="dc-name">${c.name}${g.count===2 ? ' <span class="dc-count-2">×2</span>' : ''}</div>
+        <div class="dc-sub" style="color:${rarCol}">${c.gtype} · ${c.wounds||'-'}w</div>
+      </div>
+      <div class="dc-el">${c.elixir}⚡</div>
+      <button class="dc-rm" onclick="dbRemoveOne('${c.id}');event.stopPropagation()">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function dbRemoveOne(id) {
+  const i = deck.findLastIndex ? deck.findLastIndex(c => c.id === id) : deck.map(c=>c.id).lastIndexOf(id);
+  if (i > -1) { deck.splice(i, 1); renderDB(); }
+}
+
 function renderDB() {
   const pool = document.getElementById('dbPool'); if (!pool) return;
   pool.innerHTML = '';
   const seen = new Set();
   CARDS
     .filter(c => { const k = c.pid || c.id; if (seen.has(k)) return false; seen.add(k); return true; })
-    .filter(c => dbType === 'all' || c.ptype === dbType)
+    .filter(c => dbType === 'all' || c.ptype === dbType || (dbType === 'trainer' && c.ptype === 'energy'))
     .forEach(c => {
       const cnt = deck.filter(x => x.id === c.id).length;
       const pm = document.createElement('div');
       pm.className = `pm ${c.rarity}${cnt >= 2 ? ' dis' : ''}${cnt > 0 ? ' sel' : ''}`;
       const artH = c.pid ? `<img src="${spriteUrl(c.pid)}" alt="${c.name}" loading="lazy" onerror="this.style.display='none'">` : '';
+      const energyIcon = {fire:'🔥',water:'💧',grass:'🌿',electric:'⚡',psychic:'🔮',fighting:'🥊',ghost:'👻',poison:'☠',normal:'⬜',ice:'❄',dragon:'🐉',rock:'🪨',energy:'⚡'};
+      const noArt = c.ptype === 'energy' ? `<div class="pm-art-empty" style="font-size:1.6rem">${energyIcon[c.ptype]||'⚡'}</div>` : '<div class="pm-art-empty">🎴</div>';
       pm.innerHTML = `<div class="pm-bg" style="background:${TYPE_BG[c.ptype]||TYPE_BG.normal}"></div>
-        <div class="pm-art">${c.pid ? artH : '<div class="pm-art-empty">🎴</div>'}</div>
+        <div class="pm-art">${c.pid ? artH : noArt}</div>
         <div class="pm-el">${c.elixir}</div>
         <div class="pm-chk">✓</div>
         <div class="pm-name">${c.name}</div>
-        <div class="pm-rarity">${c.gtype.toUpperCase()}</div>
+        <div class="pm-rarity">${c.ptype === 'energy' ? 'ENERGY +' + c.elixir + '⚡' : c.gtype.toUpperCase()}</div>
         <div class="pm-strip"></div>`;
       if (cnt < 2) pm.onclick = () => { if (deck.length < 16) { deck.push(c); renderDB(); } };
       pool.appendChild(pm);
     });
   dbUpdateInfo();
+  dbRenderDeckList();
   dbRenderAllSlots();
 }
 function dbUpdateInfo() {
   const el = document.getElementById('dbCount'); if (!el) return;
-  el.innerHTML = `${deck.length} <span style="font-size:.6rem;color:var(--soft);font-family:Nunito,sans-serif;font-weight:600">/ 16</span>`;
+  const pct = Math.round(deck.length/16*100);
+  const col = deck.length === 16 ? 'var(--grn)' : deck.length >= 12 ? 'var(--gold)' : 'var(--soft)';
+  el.innerHTML = `<span style="font-family:'Black Ops One',cursive;font-size:.7rem;color:${col}">${deck.length}</span><span style="font-size:.5rem;color:var(--mut)"> / 16</span>`;
+  // Requirements: sensible checks based on what actually exists in the card pool
+  const hasPhys  = deck.some(c => c.gtype === 'Physical');
+  const hasFly   = deck.some(c => c.gtype === 'Flying');
+  const hasSpec  = deck.some(c => c.gtype === 'Special');
+  const hasStad  = deck.some(c => c.gtype === 'Stadium');
+  const hasTrain = deck.some(c => c.gtype === 'Trainer');
+  const hasEnergy= deck.some(c => c.ptype === 'energy');
+  const is16     = deck.length === 16;
   const checks = [
-    ['reqTank', deck.some(c => c.gtype === 'Physical' && (c.wounds || 0) >= 5)],
-    ['reqFly',  deck.some(c => c.gtype === 'Flying')],
-    ['reqSpec', deck.some(c => c.gtype === 'Special')],
-    ['reqStad', deck.some(c => c.gtype === 'Stadium')],
-    ['reqTrain',deck.some(c => c.gtype === 'Trainer')],
-    ['reqTot',  deck.length === 16],
+    ['⚔ Fighter',   hasPhys,  'At least 1 Physical Pokémon'],
+    ['🦅 Flier',    hasFly,   'At least 1 Flying Pokémon'],
+    ['🔮 Special',  hasSpec,  'At least 1 Special Pokémon'],
+    ['🏟 Tank',     hasStad,  'At least 1 Stadium Pokémon'],
+    ['🎒 Trainer',  hasTrain, 'At least 1 Trainer card'],
+    ['⚡ Energy',   hasEnergy,'At least 1 Energy card'],
+    ['16 cards',    is16,     'Exactly 16 cards in deck'],
   ];
   const reqs = document.getElementById('dbReqs'); if (!reqs) return;
-  const icons = { reqTank:'🛡', reqFly:'🦅', reqSpec:'🔮', reqStad:'🏟', reqTrain:'🎒', reqTot:'16' };
-  reqs.innerHTML = checks.map(([id, ok]) =>
-    `<div title="${id}" style="width:18px;height:18px;border-radius:50%;background:${ok?'var(--grn)':'rgba(238,21,21,.25)'};border:1px solid ${ok?'var(--grn)':'rgba(238,21,21,.4)'};display:flex;align-items:center;justify-content:center;font-size:.38rem;color:${ok?'#fff':'var(--red)'}">${ok?'✓':icons[id]}</div>`
+  reqs.innerHTML = checks.map(([lbl, ok, tip]) =>
+    `<div title="${tip}" style="display:flex;align-items:center;gap:2px;padding:2px 5px;border-radius:8px;background:${ok?'rgba(34,197,94,.15)':'rgba(238,21,21,.1)'};border:1px solid ${ok?'rgba(34,197,94,.35)':'rgba(238,21,21,.25)'};font-family:'Share Tech Mono',monospace;font-size:.38rem;color:${ok?'#86efac':'#f87171'};white-space:nowrap">${ok?'✓':''} ${lbl}</div>`
   ).join('');
 }
 
@@ -1933,30 +2088,26 @@ function dbLoad(i) { dbLoadSlot(i, DB_EDITING); }
 function dbSave() { dbSaveToSlot(0, DB_EDITING); }
 function dbClear() { deck = []; renderDB(); }
 function dbRandomize() {
-  const pool = CARDS.filter(c => c.wounds !== null || c.gtype === 'Trainer');
-  const result = [];
-  const counts = {};
-  const reqs = [
-    c => c.gtype === 'Physical' && (c.wounds||0) >= 5,
-    c => c.gtype === 'Flying',
-    c => c.gtype === 'Special',
-    c => c.gtype === 'Stadium',
-    c => c.gtype === 'Trainer',
-  ];
-  reqs.forEach(fn => {
-    const opts = pool.filter(fn);
-    if (!opts.length) return;
-    const pick = opts[Math.floor(Math.random() * opts.length)];
-    if (!counts[pick.id]) counts[pick.id] = 0;
-    if (counts[pick.id] < 2) { result.push(pick); counts[pick.id]++; }
+  deck = [];
+  const allPoke   = CARDS.filter(c => c.gtype !== 'Trainer' && c.ptype !== 'energy');
+  const trainers  = CARDS.filter(c => c.gtype === 'Trainer' && c.ptype !== 'energy');
+  const energies  = CARDS.filter(c => c.ptype === 'energy');
+  const byType = (gt) => allPoke.filter(c => c.gtype === gt);
+  const pick = (arr) => arr[Math.floor(Math.random()*arr.length)];
+  const addUniq = (c) => { if (c && deck.filter(x=>x.id===c.id).length < 2 && deck.length < 16) deck.push(c); };
+  // Guarantee one of each required type
+  ['Physical','Flying','Special','Stadium'].forEach(gt => {
+    const opts = byType(gt); if (opts.length) addUniq(pick(opts));
   });
-  const shuffled = pool.slice().sort(() => Math.random() - .5);
-  for (const c of shuffled) {
-    if (result.length >= 16) break;
-    if (!counts[c.id]) counts[c.id] = 0;
-    if (counts[c.id] < 2) { result.push(c); counts[c.id]++; }
+  // Guarantee 1 trainer + 1 energy
+  if (trainers.length) addUniq(pick(trainers));
+  if (energies.length) addUniq(pick(energies));
+  // Fill remainder randomly from all non-energy
+  const pool = allPoke.concat(trainers);
+  let attempts = 0;
+  while (deck.length < 16 && attempts++ < 200) {
+    addUniq(pick(pool));
   }
-  deck = result.slice(0, 16);
   renderDB();
 }
 
@@ -1987,6 +2138,7 @@ function mkDefaultCPU() {
 }
 
 // ── Unit factory ──────────────────────────────────
+var _uidCounter = 0;
 function mkUnit(card, owner) {
   return {
     uid: card.id + '_' + Math.random().toString(36).slice(2, 7),
@@ -1996,7 +2148,8 @@ function mkUnit(card, owner) {
     w: 0, speed: card.speed || '🧍',
     passive: card.passive || null, cs: card.cs || '',
     quote: card.quote || '', owner,
-    frozen: false, _barrier: 0, _xatk: 0, _block: false, _skip: false
+    frozen: false, _barrier: 0, _xatk: 0, _block: false, _skip: false,
+    _uid: 'u' + (++_uidCounter)
   };
 }
 function mkDeck(units) { return shuffle(units.slice()); }  // no duplication — deck is exactly the 16 cards
@@ -2313,6 +2466,37 @@ function renderStory(){
 }
 
 
+
+// ── Damage popup system ──────────────────────────────────────────────────
+var _dmgQueue = []; // {uid, amount, type:'dmg'|'heal'|'tower'}
+function dmgPop(uid, amount, type) {
+  if (amount <= 0) return;
+  _dmgQueue.push({uid, amount, type: type || 'dmg'});
+}
+function flushDmgPops() {
+  if (!_dmgQueue.length) return;
+  _dmgQueue.forEach(function(item) {
+    var el;
+    if (item.uid.startsWith('tower-')) {
+      el = document.querySelector('[data-tuid="' + item.uid + '"]');
+    } else {
+      el = document.querySelector('[data-uid="' + item.uid + '"]');
+    }
+    if (!el) return;
+    var rect = el.getBoundingClientRect();
+    var pop = document.createElement('div');
+    pop.className = 'dmg-pop' + (item.type === 'heal' ? ' heal' : item.type === 'tower' ? ' tower' : '');
+    pop.textContent = (item.type === 'heal' ? '+' : '−') + item.amount + 'w';
+    // Center on element, slight random horizontal offset for multiple hits
+    var rx = (Math.random() - 0.5) * 20;
+    pop.style.left = (rect.left + rect.width / 2 - 14 + rx) + 'px';
+    pop.style.top  = (rect.top + rect.height * 0.2) + 'px';
+    document.body.appendChild(pop);
+    setTimeout(function() { if (pop.parentNode) pop.parentNode.removeChild(pop); }, 1050);
+  });
+  _dmgQueue = [];
+}
+
 function gLogClear() { const el = document.getElementById('eventToast'); if(el) el.classList.remove('show'); }
 
 // ── D20 toast ─────────────────────────────────────
@@ -2388,7 +2572,8 @@ function tokHtml(u, side) {
   if (u._skip)            badges += `<div class="tok-status tok-skip">💤</div>`;
   if (u._block)           badges += `<div class="tok-status tok-block">🚫</div>`;
   const frozenClass = u.frozen ? ' frozen' : '';
-  return `<div class="ptok ${side}${frozenClass}" onclick="showUnitPopup(this.dataset.d)" data-d="${data}">
+  const uid = u._uid || '';
+  return `<div class="ptok ${side}${frozenClass}" onclick="showUnitPopup(this.dataset.d)" data-d="${data}" data-uid="${uid}">
     ${art}
     <div class="ptok-hp" style="background:${fc}">${hp}</div>
     ${badges}
@@ -2420,7 +2605,7 @@ function showUnitPopup(dataStr) {
 }
 
 // ── Render game board ─────────────────────────────
-function render() { renderBoard(); renderHand(); }
+function render() { renderBoard(); renderHand(); requestAnimationFrame(flushDmgPops); }
 
 function renderBoard() {
   const b = document.getElementById('playBoard'); if (!b) return;
@@ -2711,13 +2896,16 @@ function showSpellTargetPicker(sp, lane, mode, units) {
       const h = nm==='SUPER POTION'?3:2;
       if (nm==='POTION'||nm==='SUPER POTION') {
         const h = nm==='SUPER POTION'?3:2;
-        u.w = Math.max(0, u.w - h);
+        const prev=u.w; u.w = Math.max(0, u.w - h);
+        const healed=prev-u.w; if(healed>0) dmgPop(u._uid, healed, 'heal');
         gLog('heal', `${u.name} healed ${h}w!`);
       } else if (nm==='HYPER POTION') {
-        u.w = Math.max(0, u.w - 5);
+        const prev=u.w; u.w = Math.max(0, u.w - 5);
+        const healed=prev-u.w; if(healed>0) dmgPop(u._uid, healed, 'heal');
         gLog('heal', `${u.name} healed 5w!`);
       } else if (nm==='FULL RESTORE') {
-        u.w = 0; u.frozen = false;
+        const healed=u.w; u.w = 0; u.frozen = false;
+        if(healed>0) dmgPop(u._uid, healed, 'heal');
         gLog('heal', `${u.name} fully restored!`);
       } else if (nm==='X ATTACK') {
         u._xatk = 2;
@@ -2778,13 +2966,13 @@ function doTrainer(sp, lane, side) {
     if (last) { const revived = {...last, w:0, frozen:false}; G[side].units['b' + lane].push(revived); gLog('play', `${last.name} revived at full HP!`); }
   } else if (nm === 'FIRE BLAST') {
     const eu = allUnits(en, lane).length ? allUnits(en, lane) : allUnits(en, lane==='a'?'b':'a');
-    if (eu.length) { eu[0].w += 3; eu.slice(1).forEach(u => u.w += 1); gLog('atk', `Fire Blast! +3w to ${eu[0].name}, +1w splash!`); checkKills(); }
+    if (eu.length) { eu[0].w += 3; dmgPop(eu[0]._uid,3,'dmg'); eu.slice(1).forEach(u => { u.w += 1; dmgPop(u._uid,1,'dmg'); }); gLog('atk', `Fire Blast! +3w to ${eu[0].name}, +1w splash!`); checkKills(); }
   } else if (nm === 'BLIZZARD') {
     allUnits(en, lane).forEach(u => u.frozen = true);
     const other = allUnits(en, lane==='a'?'b':'a'); if(other.length) other[0].frozen=true;
     gLog('atk', `Blizzard! All Trainer ${lane.toUpperCase()} enemies frozen!`);
   } else if (nm === 'EARTHQUAKE') {
-    ['p1','p2'].forEach(s => ['a','b'].forEach(l => allUnits(s, l).forEach(u => u.w += 1)));
+    ['p1','p2'].forEach(s => ['a','b'].forEach(l => allUnits(s, l).forEach(u => { u.w += 1; dmgPop(u._uid,1,'dmg'); })));
     gLog('atk', 'Earthquake! +1w to ALL Pokémon both sides!'); checkKills();
   } else if (nm === 'X ATTACK') {
     // Buff the most advanced unit in either lane
@@ -2797,6 +2985,11 @@ function doTrainer(sp, lane, side) {
     if (allEn.length) { const t = allEn[0]; G.eliminated.push({...t,owner:en}); ['x','f','b'].forEach(r => { ['a','b'].forEach(l => { const arr = G[en].units[r+l]; const i = arr.indexOf(t); if (i > -1) arr.splice(i,1); }); }); gLog('cs', `MASTER BALL! ${t.name} captured!`); }
   } else if (nm === 'POKÉ BALL') {
     draw(G[side]); gLog('play', 'Poké Ball — drew 1 card!');
+  } else if (nm.endsWith('ENERGY') || nm === 'DOUBLE COLORLESS') {
+    // Energy cards give elixir
+    const gain = nm === 'DOUBLE COLORLESS' ? 2 : 1;
+    G[side].elixir = Math.min(G[side].elixir + gain, 10);
+    gLog('play', `${sp.name}: +${gain} Elixir! (${G[side].elixir}⚡)`);
   } else if (nm === 'HYPER POTION') {
     const t = myAll.sort((a,b) => b.w - a.w)[0];
     if (t) { t.w = Math.max(0, t.w - 5); gLog('heal', `${t.name} healed 5w!`); }
@@ -2973,7 +3166,7 @@ function pgRoll() {
   if (targets.length) {
     const t = targets[0];
     if (t._barrier > 0) { t._barrier--; wd = 0; gLog('atk', 'Barrier blocked!'); }
-    else t.w += wd;
+    else { t.w += wd; if (wd > 0) dmgPop(t._uid, wd, 'dmg'); }
     checkKills();
     if (cs) doCS(u, side, lane, en);
   } else if (canTower) {
@@ -2990,11 +3183,13 @@ function hitTower(atSide, lane, wd) {
   if (!tw.fallen) {
     tw.w = Math.min(tw.max, tw.w + Math.max(1, wd));
     gLog('tow', `→ Trainer ${lane.toUpperCase()} +${Math.max(1,wd)}w (${tw.w}/${tw.max})`);
+    dmgPop('tower-'+en+'-t'+lane.toUpperCase(), Math.max(1,wd), 'tower');
     if (tw.w >= tw.max) { tw.fallen = true; gLog('cs', `TRAINER ${lane.toUpperCase()} FALLS! Gym Leader now active!`); }
   } else if (enAny) {
     const kg = G[en].king;
     kg.w = Math.min(kg.max, kg.w + Math.max(1, wd));
     gLog('dmg', `→ GYM LEADER +${Math.max(1,wd)}w (${kg.w}/${kg.max})`);
+    dmgPop('tower-'+en+'-king', Math.max(1,wd), 'tower');
     if (kg.w >= kg.max) kg.fallen = true;
   }
 }
@@ -3008,31 +3203,31 @@ function doCS(u, side, lane, en) {
     if (eu.length) eu[0].w += 3; ['x','f','b'].forEach(z => { const i = G[en].units[z+lane].indexOf(eu[0]); if(i>-1){G[en].units[z+lane].splice(i,1); G[en].units['b'+lane].push(eu[0]);}});
     gLog('cs','CHARIZARD: +3w + flies to enemy Back row!');
   } else if (nm === 'BLASTOISE') {
-    if (eu.length) { eu[0].w += 4; gLog('cs','HYDRO PUMP: +4w!'); }
+    if (eu.length) { eu[0].w += 4; dmgPop(eu[0]._uid,4,'dmg'); gLog('cs','HYDRO PUMP: +4w!'); }
   } else if (nm === 'VENUSAUR') {
-    if (eu.length) { eu[0].w += 5; gLog('cs','SOLAR BEAM: +5w!'); }
+    if (eu.length) { eu[0].w += 5; dmgPop(eu[0]._uid,5,'dmg'); gLog('cs','SOLAR BEAM: +5w!'); }
   } else if (nm === 'PIKACHU') {
-    if (eu.length) { eu[0].w += 3; eu.slice(1, 3).forEach(e => e.w += 1); } gLog('cs','THUNDERBOLT: +3w + splash!');
+    if (eu.length) { eu[0].w += 3; dmgPop(eu[0]._uid,3,'dmg'); eu.slice(1,3).forEach(e => { e.w += 1; dmgPop(e._uid,1,'dmg'); }); } gLog('cs','THUNDERBOLT: +3w + splash!');
   } else if (nm === 'MEWTWO') {
-    if (eu.length) { eu[0].w += 5; gLog('cs','PSYSTRIKE: +5w!'); }
+    if (eu.length) { eu[0].w += 5; dmgPop(eu[0]._uid,5,'dmg'); gLog('cs','PSYSTRIKE: +5w!'); }
   } else if (nm === 'MEW') {
     gLog('cs','MEW: Transform — copies last CS used!');
   } else if (nm === 'GENGAR') {
     if (eu.length) eu[0].w += 4; if (eu.length > 1) eu[1].w += 1; gLog('cs','SHADOW BALL: +4w + hit second!');
   } else if (nm === 'DRAGONITE') {
-    if (eu.length) { eu[0].w += 5; gLog('cs','HYPER BEAM: +5w! Skip next.'); u._skip = true; }
+    if (eu.length) { eu[0].w += 5; dmgPop(eu[0]._uid,5,'dmg'); gLog('cs','HYPER BEAM: +5w! Skip next.'); u._skip = true; }
   } else if (nm === 'GYARADOS') {
-    if (eu.length) { eu[0].w += 4; gLog('cs','HYPER BEAM: +4w! Recharge.'); u._skip = true; }
+    if (eu.length) { eu[0].w += 4; dmgPop(eu[0]._uid,4,'dmg'); gLog('cs','HYPER BEAM: +4w! Recharge.'); u._skip = true; }
   } else if (nm === 'ZAPDOS') {
-    ['a','b'].forEach(l => allUnits(en, l).forEach(e => e.w += 2)); checkKills(); gLog('cs','DISCHARGE: +2w ALL enemy Pokémon!');
+    ['a','b'].forEach(l => allUnits(en, l).forEach(e => { e.w += 2; dmgPop(e._uid,2,'dmg'); })); checkKills(); gLog('cs','DISCHARGE: +2w ALL enemy Pokémon!');
   } else if (nm === 'MOLTRES') {
-    if (eu.length) { eu[0].w += 3; eu.slice(1).forEach(e => e.w += 1); } gLog('cs','MOLTRES: +3w target + +1w others in lane!');
+    if (eu.length) { eu[0].w += 3; dmgPop(eu[0]._uid,3,'dmg'); eu.slice(1).forEach(e => { e.w += 1; dmgPop(e._uid,1,'dmg'); }); } gLog('cs','MOLTRES: +3w target + +1w others in lane!');
   } else if (nm === 'ARTICUNO') {
     ['a','b'].forEach(l => allUnits(en, l).forEach(e => e.frozen = true)); gLog('cs','BLIZZARD: ALL enemies frozen!');
   } else if (nm === 'LAPRAS') {
     eu.forEach(e => e.frozen = true); gLog('cs','ICE BEAM: all in zone frozen!');
   } else if (nm === 'SNORLAX') {
-    eu.forEach(e => e.w += 3); gLog('cs','BODY SLAM: +3w to ALL in zone!');
+    eu.forEach(e => { e.w += 3; dmgPop(e._uid,3,'dmg'); }); gLog('cs','BODY SLAM: +3w to ALL in zone!');
   } else if (nm === 'MACHAMP') {
     if (eu.length) { eu[0].w += 3; eu[0].frozen = true; gLog('cs','DYNAMIC PUNCH: +3w + freeze!'); }
   } else if (nm === 'ALAKAZAM') {
@@ -3103,7 +3298,7 @@ function doTowers() {
     // Trainer tower only reaches Neutral and Front zones (not Back)
     const tgts = (G[atSide].units['x'+lane]||[]).concat(G[atSide].units['f'+lane]||[]);
     if (!tgts.length) return;
-    tgts[0].w += 1; gLog('tow', `${lbl} → 1w to ${tgts[0].name}`); checkKills();
+    tgts[0].w += 1; dmgPop(tgts[0]._uid, 1, 'dmg'); gLog('tow', `${lbl} → 1w to ${tgts[0].name}`); checkKills();
   }
   gymFire(G.p2.tA, 'CPU Gym A', 'p1', 'a'); gymFire(G.p1.tA, 'Your Gym A', 'p2', 'a');
   gymFire(G.p2.tB, 'CPU Gym B', 'p1', 'b'); gymFire(G.p1.tB, 'Your Gym B', 'p2', 'b');
@@ -3120,7 +3315,7 @@ function doTowers() {
     // Prefer neutral/front in either lane, fall back to back
     const tgts = ['xa','fa','xb','fb','ba','bb'].flatMap(z => G[atSide].units[z]||[]);
     if (!tgts.length) return;
-    tgts[0].w += 2; gLog('tow', `${lbl} → 2w to ${tgts[0].name}`); checkKills();
+    tgts[0].w += 2; dmgPop(tgts[0]._uid, 2, 'dmg'); gLog('tow', `${lbl} → 2w to ${tgts[0].name}`); checkKills();
     if (kg.w >= kg.max) kg.fallen = true;
   }
   kingFire('p1', 'CPU Gym Leader');
