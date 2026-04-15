@@ -173,6 +173,61 @@ li{margin-bottom:4px;line-height:1.5}
 /* ── Deck Builder split layout ── */
 #dbLayout{display:flex;gap:10px;align-items:flex-start}
 #dbPoolWrap{flex:1;min-width:0}
+
+/* ── Top deck preview strip ── */
+#dbDeckPreview{
+  background:var(--paper);border:1px solid var(--bdr);border-radius:12px;
+  padding:10px 12px 8px;margin-bottom:10px;
+}
+#dbDeckPreview .dp-hdr{
+  display:flex;align-items:center;gap:8px;margin-bottom:8px;
+}
+#dbDeckPreview .dp-title{
+  font-family:'Black Ops One',cursive;font-size:.65rem;letter-spacing:1px;
+  flex:1;
+}
+#dbDeckPreview .dp-bar-wrap{
+  flex:1;height:5px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;max-width:100px;
+}
+#dbDeckPreview .dp-bar-fill{
+  height:100%;background:linear-gradient(90deg,var(--el),var(--gold));border-radius:3px;transition:width .3s;
+}
+#dbDeckPreview .dp-count-lbl{
+  font-family:'Black Ops One',cursive;font-size:.58rem;white-space:nowrap;
+}
+.dp-sprite-row{
+  display:flex;gap:4px;overflow-x:auto;padding-bottom:4px;
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.1) transparent;
+}
+.dp-sprite-row::-webkit-scrollbar{height:3px}
+.dp-sprite-row::-webkit-scrollbar-track{background:transparent}
+.dp-sprite-row::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px}
+.dp-sprite{
+  flex-shrink:0;width:40px;height:40px;border-radius:5px;
+  background:#0a0a18;border:1.5px solid var(--bdr);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;cursor:pointer;
+  transition:border-color .12s, transform .12s;
+}
+.dp-sprite:hover{border-color:var(--red);transform:scale(1.12)}
+.dp-sprite img{width:100%;height:100%;object-fit:contain;image-rendering:pixelated}
+.dp-sprite .dp-spr-el{
+  position:absolute;bottom:1px;right:1px;
+  font-family:'Black Ops One',cursive;font-size:.3rem;
+  background:rgba(0,0,0,.75);color:var(--gold);
+  border-radius:3px;padding:0 2px;line-height:1.4;
+}
+.dp-sprite .dp-spr-icon{font-size:1.1rem;line-height:1}
+.dp-sprite .dp-spr-x2{
+  position:absolute;top:1px;left:1px;
+  font-family:'Black Ops One',cursive;font-size:.28rem;
+  background:rgba(255,203,5,.8);color:#000;border-radius:3px;padding:0 2px;line-height:1.4;
+}
+.dp-sprite-empty{
+  flex-shrink:0;width:40px;height:40px;border-radius:5px;
+  background:rgba(255,255,255,.02);border:1.5px dashed rgba(255,255,255,.08);
+}
+
 #dbDeckPanel{
   width:220px;flex-shrink:0;
   background:var(--paper);border:1px solid var(--bdr);border-radius:12px;
@@ -180,7 +235,62 @@ li{margin-bottom:4px;line-height:1.5}
 }
 @media(max-width:600px){
   #dbLayout{flex-direction:column}
-  #dbDeckPanel{width:100%;position:static;max-height:none}
+  
+/* ── Top deck preview strip ── */
+#dbDeckPreview{
+  background:var(--paper);border:1px solid var(--bdr);border-radius:12px;
+  padding:10px 12px 8px;margin-bottom:10px;
+}
+#dbDeckPreview .dp-hdr{
+  display:flex;align-items:center;gap:8px;margin-bottom:8px;
+}
+#dbDeckPreview .dp-title{
+  font-family:'Black Ops One',cursive;font-size:.65rem;letter-spacing:1px;
+  flex:1;
+}
+#dbDeckPreview .dp-bar-wrap{
+  flex:1;height:5px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;max-width:100px;
+}
+#dbDeckPreview .dp-bar-fill{
+  height:100%;background:linear-gradient(90deg,var(--el),var(--gold));border-radius:3px;transition:width .3s;
+}
+#dbDeckPreview .dp-count-lbl{
+  font-family:'Black Ops One',cursive;font-size:.58rem;white-space:nowrap;
+}
+.dp-sprite-row{
+  display:flex;gap:4px;overflow-x:auto;padding-bottom:4px;
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.1) transparent;
+}
+.dp-sprite-row::-webkit-scrollbar{height:3px}
+.dp-sprite-row::-webkit-scrollbar-track{background:transparent}
+.dp-sprite-row::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px}
+.dp-sprite{
+  flex-shrink:0;width:40px;height:40px;border-radius:5px;
+  background:#0a0a18;border:1.5px solid var(--bdr);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;cursor:pointer;
+  transition:border-color .12s, transform .12s;
+}
+.dp-sprite:hover{border-color:var(--red);transform:scale(1.12)}
+.dp-sprite img{width:100%;height:100%;object-fit:contain;image-rendering:pixelated}
+.dp-sprite .dp-spr-el{
+  position:absolute;bottom:1px;right:1px;
+  font-family:'Black Ops One',cursive;font-size:.3rem;
+  background:rgba(0,0,0,.75);color:var(--gold);
+  border-radius:3px;padding:0 2px;line-height:1.4;
+}
+.dp-sprite .dp-spr-icon{font-size:1.1rem;line-height:1}
+.dp-sprite .dp-spr-x2{
+  position:absolute;top:1px;left:1px;
+  font-family:'Black Ops One',cursive;font-size:.28rem;
+  background:rgba(255,203,5,.8);color:#000;border-radius:3px;padding:0 2px;line-height:1.4;
+}
+.dp-sprite-empty{
+  flex-shrink:0;width:40px;height:40px;border-radius:5px;
+  background:rgba(255,255,255,.02);border:1.5px dashed rgba(255,255,255,.08);
+}
+
+#dbDeckPanel{width:100%;position:static;max-height:none}
 }
 .deck-card-row{
   display:flex;align-items:center;gap:7px;
@@ -818,18 +928,37 @@ body.in-game{overflow:hidden;position:fixed;width:100%;height:100%}
 <!-- ═══ DECK BUILDER ═══ -->
 <div class="pg" id="pg-deck"><div class="wrap">
 
-<!-- Header -->
-<div class="sec" style="--acc:var(--gold);padding-bottom:10px">
-  <h1>🃏 <em>Deck Builder</em></h1>
-  <div class="tag">16 cards · Max 2 copies per card · Tap a card to add · Tap deck to remove</div>
-  <!-- Editing toggle -->
-  <div style="display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap">
-    <div id="dbEditingLabel" style="font-family:'Black Ops One',cursive;font-size:.68rem;letter-spacing:1px;color:var(--blue)">🔵 PLAYER DECK</div>
-    <button onclick="dbToggleEditing()" id="dbToggleBtn" style="padding:4px 12px;background:rgba(238,21,21,.12);border:1px solid rgba(238,21,21,.3);border-radius:10px;color:var(--red);font-family:'Black Ops One',cursive;font-size:.48rem;cursor:pointer">Switch to 🔴 Opponent</button>
+<!-- ── YOUR DECK section (everything at the top) ── -->
+<div class="sec" id="dbDeckPreview" style="--acc:var(--blue);padding:0;overflow:hidden">
+
+  <!-- Row 1: Title + toggle + count + progress bar -->
+  <div style="display:flex;align-items:center;gap:8px;padding:10px 14px 8px;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,.07)">
+    <div id="dbPreviewTitle" style="font-family:'Black Ops One',cursive;font-size:.72rem;letter-spacing:1px;color:var(--blue)">🔵 YOUR DECK</div>
+    <button onclick="dbToggleEditing()" id="dbToggleBtn" style="padding:3px 10px;background:rgba(238,21,21,.12);border:1px solid rgba(238,21,21,.3);border-radius:10px;color:var(--red);font-family:'Black Ops One',cursive;font-size:.46rem;cursor:pointer;white-space:nowrap">Switch to 🔴 Opponent</button>
+    <div style="display:flex;align-items:center;gap:6px;margin-left:auto">
+      <div style="width:70px;height:5px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden">
+        <div id="dbPreviewBar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--el),var(--gold));border-radius:3px;transition:width .3s"></div>
+      </div>
+      <div id="dbPreviewCount" style="font-family:'Black Ops One',cursive;font-size:.65rem;color:var(--soft);white-space:nowrap">0 / 16</div>
+    </div>
   </div>
+
+  <!-- Row 2: Requirement badges + Save/Random/Clear -->
+  <div style="display:flex;align-items:center;gap:6px;padding:7px 14px;border-bottom:1px solid rgba(255,255,255,.07);flex-wrap:wrap">
+    <div id="dbReqs" style="display:flex;gap:3px;flex-wrap:wrap;align-items:center;flex:1"></div>
+    <div style="display:flex;gap:4px;flex-shrink:0">
+      <button onclick="dbSave()" style="padding:5px 10px;background:rgba(255,203,5,.1);border:1px solid rgba(255,203,5,.28);border-radius:6px;color:var(--gold);font-family:'Black Ops One',cursive;font-size:.5rem;cursor:pointer;white-space:nowrap">💾 Save</button>
+      <button onclick="dbRandomize()" style="padding:5px 10px;background:rgba(112,56,248,.12);border:1px solid rgba(112,56,248,.3);border-radius:6px;color:#a080f8;font-family:'Black Ops One',cursive;font-size:.5rem;cursor:pointer;white-space:nowrap">🎲 Random</button>
+      <button onclick="dbClear()" style="padding:5px 10px;background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:6px;color:var(--soft);font-family:'Black Ops One',cursive;font-size:.5rem;cursor:pointer;white-space:nowrap">✕ Clear</button>
+    </div>
+  </div>
+
+  <!-- Row 3: Card grid (image-2 style 3-col layout) -->
+  <div id="dbDeckListTop"></div>
+  <div id="dbDeckListTopEmpty" style="padding:16px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:.48rem;color:var(--mut);letter-spacing:1px">No cards yet — tap cards below to add them.</div>
 </div>
 
-<!-- Saved Slots row -->
+<!-- ── Saved Slots ── -->
 <div class="sec" style="--acc:var(--blue);padding:10px 14px">
   <div style="display:flex;gap:12px;flex-wrap:wrap">
     <div style="flex:1;min-width:0">
@@ -843,51 +972,34 @@ body.in-game{overflow:hidden;position:fixed;width:100%;height:100%}
   </div>
 </div>
 
-<!-- Split layout: card pool + deck panel -->
-<div id="dbLayout">
-
-  <!-- LEFT: Card pool -->
-  <div id="dbPoolWrap">
-    <div class="sec" style="--acc:var(--el);padding-bottom:10px">
-      <!-- Type tabs -->
-      <div class="stabs" id="dbTabs" style="margin-bottom:8px;flex-wrap:wrap">
-        <button class="stab all on"   onclick="setDbType('all',this)">ALL</button>
-        <button class="stab fire"     onclick="setDbType('fire',this)">🔥</button>
-        <button class="stab water"    onclick="setDbType('water',this)">💧</button>
-        <button class="stab grass"    onclick="setDbType('grass',this)">🌿</button>
-        <button class="stab electric" onclick="setDbType('electric',this)">⚡</button>
-        <button class="stab psychic"  onclick="setDbType('psychic',this)">🔮</button>
-        <button class="stab fighting" onclick="setDbType('fighting',this)">🥊</button>
-        <button class="stab ghost"    onclick="setDbType('ghost',this)">👻</button>
-        <button class="stab poison"   onclick="setDbType('poison',this)">☠</button>
-        <button class="stab normal"   onclick="setDbType('normal',this)">⬜</button>
-        <button class="stab trainer"  onclick="setDbType('trainer',this)">🎒</button>
-        <button class="stab energy"   onclick="setDbType('energy',this)">⚡ Energy</button>
-      </div>
-      <div class="pm-grid" id="dbPool"></div>
-    </div>
+<!-- ── Card Pool ── -->
+<div class="sec" style="--acc:var(--el);padding-bottom:10px">
+  <div class="stabs" id="dbTabs" style="margin-bottom:8px;flex-wrap:wrap">
+    <button class="stab all on"   onclick="setDbType('all',this)">ALL</button>
+    <button class="stab fire"     onclick="setDbType('fire',this)">🔥</button>
+    <button class="stab water"    onclick="setDbType('water',this)">💧</button>
+    <button class="stab grass"    onclick="setDbType('grass',this)">🌿</button>
+    <button class="stab electric" onclick="setDbType('electric',this)">⚡</button>
+    <button class="stab psychic"  onclick="setDbType('psychic',this)">🔮</button>
+    <button class="stab fighting" onclick="setDbType('fighting',this)">🥊</button>
+    <button class="stab ghost"    onclick="setDbType('ghost',this)">👻</button>
+    <button class="stab poison"   onclick="setDbType('poison',this)">☠</button>
+    <button class="stab normal"   onclick="setDbType('normal',this)">⬜</button>
+    <button class="stab trainer"  onclick="setDbType('trainer',this)">🎒</button>
+    <button class="stab energy"   onclick="setDbType('energy',this)">⚡ Energy</button>
   </div>
-
-  <!-- RIGHT: Deck panel -->
-  <div id="dbDeckPanel">
-    <div class="deck-panel-hdr">
-      <div class="deck-panel-hdr-title" id="dbPanelTitle" style="color:var(--blue)">🔵 Your Deck</div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px">
-        <div class="deck-panel-hdr-sub" id="dbCount">0 / 16</div>
-        <div id="dbReqs" style="display:flex;gap:2px;flex-wrap:wrap;align-items:center"></div>
-      </div>
-      <!-- Actions -->
-      <div style="display:flex;gap:4px;margin-top:7px">
-        <button onclick="dbSave()" style="flex:1;padding:6px 4px;background:rgba(255,203,5,.1);border:1px solid rgba(255,203,5,.28);border-radius:6px;color:var(--gold);font-family:'Black Ops One',cursive;font-size:.5rem;cursor:pointer">💾 Save</button>
-        <button onclick="dbRandomize()" style="flex:1;padding:6px 4px;background:rgba(112,56,248,.12);border:1px solid rgba(112,56,248,.3);border-radius:6px;color:#a080f8;font-family:'Black Ops One',cursive;font-size:.5rem;cursor:pointer">🎲 Random</button>
-        <button onclick="dbClear()" style="flex:1;padding:6px 4px;background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:6px;color:var(--soft);font-family:'Black Ops One',cursive;font-size:.5rem;cursor:pointer">✕ Clear</button>
-      </div>
-    </div>
-    <!-- Deck card list -->
-    <div id="dbDeckList"></div>
-  </div>
-
+  <div class="pm-grid" id="dbPool"></div>
 </div>
+
+<!-- hidden stubs so JS references don't break -->
+<div style="display:none">
+  <div id="dbEditingLabel"></div>
+  <div id="dbPanelTitle"></div>
+  <div id="dbCount"></div>
+  <div id="dbDeckList"></div>
+  <div id="dbDeckPanel"></div>
+</div>
+
 </div></div>
 <!-- ═══ VS CPU — game fills entire screen, nav hidden ═══ -->
 <div class="pg" id="pg-play" style="display:none">
@@ -1657,25 +1769,25 @@ const CARDS = [
 
 // ══ ENERGY CARDS ══
 {id:'en01',pid:null,name:'FIRE ENERGY',    ptype:'energy',gtype:'Trainer',rarity:'common', elixir:1,wounds:null,speed:null,passive:null,
- cs:'Gain +1 Elixir immediately when played.',quote:'Powers Fire-type attacks.'},
+ cs:'Chosen ally gets +2w bonus on their next attack. (Powered up!)',quote:'Powers Fire-type attacks.'},
 
 {id:'en02',pid:null,name:'WATER ENERGY',   ptype:'energy',gtype:'Trainer',rarity:'common', elixir:1,wounds:null,speed:null,passive:null,
- cs:'Gain +1 Elixir immediately when played.',quote:'Powers Water-type attacks.'},
+ cs:'Chosen ally heals 2w.',quote:'Powers Water-type attacks.'},
 
 {id:'en03',pid:null,name:'GRASS ENERGY',   ptype:'energy',gtype:'Trainer',rarity:'common', elixir:1,wounds:null,speed:null,passive:null,
- cs:'Gain +1 Elixir immediately when played.',quote:'Powers Grass-type attacks.'},
+ cs:'Chosen ally heals 3w.',quote:'Powers Grass-type attacks.'},
 
 {id:'en04',pid:null,name:'ELECTRIC ENERGY',ptype:'energy',gtype:'Trainer',rarity:'common', elixir:1,wounds:null,speed:null,passive:null,
- cs:'Gain +1 Elixir immediately when played.',quote:'Powers Electric-type attacks.'},
+ cs:'Chosen ally surges forward — instantly moves to Neutral zone.',quote:'Powers Electric-type attacks.'},
 
 {id:'en05',pid:null,name:'PSYCHIC ENERGY', ptype:'energy',gtype:'Trainer',rarity:'common', elixir:1,wounds:null,speed:null,passive:null,
- cs:'Gain +1 Elixir immediately when played.',quote:'Powers Psychic-type attacks.'},
+ cs:'Chosen enemy is confused — skips their next attack.',quote:'Powers Psychic-type attacks.'},
 
 {id:'en06',pid:null,name:'FIGHTING ENERGY',ptype:'energy',gtype:'Trainer',rarity:'common', elixir:1,wounds:null,speed:null,passive:null,
- cs:'Gain +1 Elixir immediately when played.',quote:'Powers Fighting-type attacks.'},
+ cs:'Chosen ally gets +3w bonus on their next attack.',quote:'Powers Fighting-type attacks.'},
 
 {id:'en07',pid:null,name:'DOUBLE COLORLESS',ptype:'energy',gtype:'Trainer',rarity:'rare',  elixir:2,wounds:null,speed:null,passive:null,
- cs:'Gain +2 Elixir immediately when played.',quote:'Provides 2 colorless energy at once.'},
+ cs:'Chosen ally gets +2w bonus next attack AND heals 2w.',quote:'Provides 2 colorless energy at once.'},
 
 ]; // end CARDS
 
@@ -1881,19 +1993,13 @@ let ACTIVE_SLOT = -1;
 function dbToggleEditing() {
   DB_EDITING = DB_EDITING === 'player' ? 'cpu' : 'player';
   deck = [];
-  const lbl = document.getElementById('dbEditingLabel');
   const btn = document.getElementById('dbToggleBtn');
   if (DB_EDITING === 'player') {
-    if (lbl) lbl.style.color = 'var(--blue)';
-    if (lbl) lbl.textContent = '🔵 EDITING: PLAYER DECK';
-    if (btn) { btn.textContent = 'Switch → 🔴 Opponent'; btn.style.color = 'var(--red)'; btn.style.borderColor = 'rgba(238,21,21,.3)'; btn.style.background = 'rgba(238,21,21,.1)'; }
+    if (btn) { btn.textContent = 'Switch to 🔴 Opponent'; btn.style.color = 'var(--red)'; btn.style.borderColor = 'rgba(238,21,21,.3)'; btn.style.background = 'rgba(238,21,21,.12)'; }
   } else {
-    if (lbl) lbl.style.color = 'var(--red)';
-    if (lbl) lbl.textContent = '🔴 EDITING: OPPONENT DECK';
-    if (btn) { btn.textContent = 'Switch → 🔵 Player'; btn.style.color = 'var(--blue)'; btn.style.borderColor = 'rgba(59,130,246,.3)'; btn.style.background = 'rgba(59,130,246,.1)'; }
+    if (btn) { btn.textContent = 'Switch to 🔵 Player'; btn.style.color = 'var(--blue)'; btn.style.borderColor = 'rgba(59,130,246,.3)'; btn.style.background = 'rgba(59,130,246,.12)'; }
   }
   renderDB();
-  dbRenderDeckList();
 }
 
 function setDbType(t, btn) {
@@ -1901,6 +2007,68 @@ function setDbType(t, btn) {
   document.querySelectorAll('#dbTabs .stab').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
   renderDB();
+}
+
+
+function renderDeckPreview() {
+  const bar      = document.getElementById('dbPreviewBar');
+  const countEl  = document.getElementById('dbPreviewCount');
+  const title    = document.getElementById('dbPreviewTitle');
+  const listTop  = document.getElementById('dbDeckListTop');
+  const emptyTop = document.getElementById('dbDeckListTopEmpty');
+
+  // Colour + label
+  const col = DB_EDITING === 'player' ? 'var(--blue)' : 'var(--red)';
+  const lbl = DB_EDITING === 'player' ? '🔵 YOUR DECK' : '🔴 OPPONENT DECK';
+  if (title) { title.textContent = lbl; title.style.color = col; }
+
+  // Also keep toggle button label in sync
+  const toggleBtn = document.getElementById('dbToggleBtn');
+  const editLabel = document.getElementById('dbEditingLabel');
+  if (editLabel) { editLabel.textContent = lbl; editLabel.style.color = col; }
+
+  // Progress bar + count
+  const pct      = Math.round(deck.length / 16 * 100);
+  const countCol = deck.length === 16 ? 'var(--grn)' : deck.length >= 12 ? 'var(--gold)' : 'var(--soft)';
+  if (bar)      { bar.style.width = pct + '%'; bar.style.background = deck.length === 16 ? 'var(--grn)' : 'linear-gradient(90deg,var(--el),var(--gold))'; }
+  if (countEl)  { countEl.textContent = deck.length + ' / 16'; countEl.style.color = countCol; }
+
+  if (!listTop) return;
+
+  // Empty state
+  if (emptyTop) emptyTop.style.display = deck.length ? 'none' : 'block';
+  if (!deck.length) { listTop.innerHTML = ''; return; }
+
+  // Group by id for ×2 badge
+  const grouped = [];
+  const seenIds = {};
+  deck.forEach(c => {
+    if (seenIds[c.id]) seenIds[c.id].count++;
+    else { const e = {card:c, count:1}; seenIds[c.id] = e; grouped.push(e); }
+  });
+
+  const energyIcon = {fire:'🔥',water:'💧',grass:'🌿',electric:'⚡',psychic:'🔮',fighting:'🥊',ghost:'👻',poison:'☠',normal:'⬜',ice:'❄',dragon:'🐉',rock:'🪨',energy:'⚡',trainer:'🎒'};
+  const rarCol = {common:'#78909c',rare:'#42a5f5',epic:'#ce93d8',legend:'var(--gold)'};
+
+  const rows = grouped.map(({card:c, count}) => {
+    const art = c.pid
+      ? `<img src="${spriteUrl(c.pid)}" loading="lazy" style="width:100%;height:100%;object-fit:contain;image-rendering:pixelated">`
+      : `<span style="font-size:.85rem;line-height:1">${energyIcon[c.ptype]||'🎴'}</span>`;
+    const rc  = rarCol[c.rarity] || '#fff';
+    const x2  = count === 2 ? ` <span style="font-family:'Black Ops One',cursive;font-size:.38rem;color:var(--gold)">×2</span>` : '';
+    return `<div class="deck-card-row" onclick="dbRemoveOne('${c.id}')" title="Tap to remove">
+      <div class="dc-art">${art}</div>
+      <div class="dc-info">
+        <div class="dc-name">${c.name}${x2}</div>
+        <div class="dc-sub" style="color:${rc}">${c.gtype} · ${c.wounds||'-'}w</div>
+      </div>
+      <div class="dc-el">${c.elixir}⚡</div>
+      <button class="dc-rm" onclick="dbRemoveOne('${c.id}');event.stopPropagation()">✕</button>
+    </div>`;
+  }).join('');
+
+  // 3-column grid matching image 2
+  listTop.innerHTML = `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid rgba(255,255,255,.05)">${rows}</div>`;
 }
 
 function dbRenderDeckList() {
@@ -1961,12 +2129,13 @@ function renderDB() {
         <div class="pm-el">${c.elixir}</div>
         <div class="pm-chk">✓</div>
         <div class="pm-name">${c.name}</div>
-        <div class="pm-rarity">${c.ptype === 'energy' ? 'ENERGY +' + c.elixir + '⚡' : c.gtype.toUpperCase()}</div>
+        <div class="pm-rarity">${c.ptype === 'energy' ? 'ENERGY CARD' : c.gtype.toUpperCase()}</div>
         <div class="pm-strip"></div>`;
       if (cnt < 2) pm.onclick = () => { if (deck.length < 16) { deck.push(c); renderDB(); } };
       pool.appendChild(pm);
     });
   dbUpdateInfo();
+  renderDeckPreview();
   dbRenderDeckList();
   dbRenderAllSlots();
 }
@@ -2828,8 +2997,8 @@ function pgSpell(lane) {
   if (G.p1.elixir < sp.elixir) { gLog('atk', 'Not enough Energy!'); return; }
   const nm = sp.name.toUpperCase();
   // Spells that need you to pick a friendly unit
-  const allyPickers = ['POTION','SUPER POTION','HYPER POTION','FULL RESTORE','X ATTACK','SWORDS DANCE','GUARD SPEC.','SWITCH'];
-  const enemyPickers = ['SMOKESCREEN'];
+  const allyPickers = ['POTION','SUPER POTION','HYPER POTION','FULL RESTORE','X ATTACK','SWORDS DANCE','GUARD SPEC.','SWITCH','FIRE ENERGY','WATER ENERGY','GRASS ENERGY','FIGHTING ENERGY','DOUBLE COLORLESS'];
+  const enemyPickers = ['SMOKESCREEN','PSYCHIC ENERGY'];
   if (allyPickers.includes(nm)) {
     const allies = allUnits('p1','a').concat(allUnits('p1','b'));
     if (!allies.length) { gLog('atk', 'No allies to target!'); return; }
@@ -2875,6 +3044,12 @@ function showSpellTargetPicker(sp, lane, mode, units) {
     'SWITCH':'🔄 Choose Pokémon to switch back to safety',
     'SMOKESCREEN':'💨 Choose enemy to blind (skip next turn)',
     'REVIVE':'💫 Choose Pokémon to revive at full HP',
+    'FIRE ENERGY':'🔥 Choose ally to power up (+2w next attack)',
+    'WATER ENERGY':'💧 Choose ally to heal 2w',
+    'GRASS ENERGY':'🌿 Choose ally to heal 3w',
+    'FIGHTING ENERGY':'🥊 Choose ally to power up (+3w next attack)',
+    'DOUBLE COLORLESS':'✨ Choose ally for +2w bonus and heal 2w',
+    'PSYCHIC ENERGY':'🔮 Choose enemy to confuse (skip next attack)',
   };
   title.textContent = labels[nm] || 'Choose Target';
   list.innerHTML = '';
@@ -2927,6 +3102,25 @@ function showSpellTargetPicker(sp, lane, mode, units) {
             break;
           }
         }
+      } else if (nm==='FIRE ENERGY') {
+        u._xatk = (u._xatk||0) + 2;
+        gLog('play', `🔥 ${u.name} powered up! +2w next attack!`);
+      } else if (nm==='WATER ENERGY') {
+        const h=Math.min(u.w,2); u.w -= h; if(h>0) dmgPop(u._uid,h,'heal');
+        gLog('heal', `💧 ${u.name} healed 2w!`);
+      } else if (nm==='GRASS ENERGY') {
+        const h=Math.min(u.w,3); u.w -= h; if(h>0) dmgPop(u._uid,h,'heal');
+        gLog('heal', `🌿 ${u.name} healed 3w!`);
+      } else if (nm==='FIGHTING ENERGY') {
+        u._xatk = (u._xatk||0) + 3;
+        gLog('play', `🥊 ${u.name} powered up! +3w next attack!`);
+      } else if (nm==='DOUBLE COLORLESS') {
+        u._xatk = (u._xatk||0) + 2;
+        const h=Math.min(u.w,2); u.w -= h; if(h>0) dmgPop(u._uid,h,'heal');
+        gLog('play', `✨ ${u.name} +2w boost and healed 2w!`);
+      } else if (nm==='PSYCHIC ENERGY') {
+        u.frozen = true;
+        gLog('atk', `🔮 ${u.name} confused — skips next attack!`);
       } else if (nm==='SMOKESCREEN') {
         u.frozen = true;
         gLog('atk', `${u.name} blinded by Smokescreen!`);
@@ -2985,11 +3179,40 @@ function doTrainer(sp, lane, side) {
     if (allEn.length) { const t = allEn[0]; G.eliminated.push({...t,owner:en}); ['x','f','b'].forEach(r => { ['a','b'].forEach(l => { const arr = G[en].units[r+l]; const i = arr.indexOf(t); if (i > -1) arr.splice(i,1); }); }); gLog('cs', `MASTER BALL! ${t.name} captured!`); }
   } else if (nm === 'POKÉ BALL') {
     draw(G[side]); gLog('play', 'Poké Ball — drew 1 card!');
-  } else if (nm.endsWith('ENERGY') || nm === 'DOUBLE COLORLESS') {
-    // Energy cards give elixir
-    const gain = nm === 'DOUBLE COLORLESS' ? 2 : 1;
-    G[side].elixir = Math.min(G[side].elixir + gain, 10);
-    gLog('play', `${sp.name}: +${gain} Elixir! (${G[side].elixir}⚡)`);
+  } else if (nm === 'FIRE ENERGY') {
+    const t = myAll[0]; if (t) { t._xatk = (t._xatk||0) + 2; gLog('play', `🔥 ${t.name} powered up! +2w next attack!`); }
+  } else if (nm === 'WATER ENERGY') {
+    const t = myAll.sort((a,b) => b.w - a.w)[0];
+    if (t) { const h=Math.min(t.w,2); t.w -= h; if(h>0) dmgPop(t._uid,h,'heal'); gLog('heal', `💧 ${t.name} healed 2w!`); }
+  } else if (nm === 'GRASS ENERGY') {
+    const t = myAll.sort((a,b) => b.w - a.w)[0];
+    if (t) { const h=Math.min(t.w,3); t.w -= h; if(h>0) dmgPop(t._uid,h,'heal'); gLog('heal', `🌿 ${t.name} healed 3w!`); }
+  } else if (nm === 'ELECTRIC ENERGY') {
+    // Move most-back ally forward to neutral zone
+    const allMy = allUnits(side,'a').concat(allUnits(side,'b'));
+    let moved = false;
+    for (const z of ['b','f']) {
+      for (const l of ['a','b']) {
+        const arr = G[side].units[z+l];
+        if (arr.length) {
+          const u = arr.splice(0,1)[0];
+          G[side].units['x'+l].push(u);
+          gLog('play', `⚡ ${u.name} surges to Neutral zone!`);
+          moved = true; break;
+        }
+      }
+      if (moved) break;
+    }
+    if (!moved) gLog('play', '⚡ Electric Energy: no ally to surge forward.');
+  } else if (nm === 'PSYCHIC ENERGY') {
+    const eu = allUnits(en,'a').concat(allUnits(en,'b'));
+    const t = eu[0];
+    if (t) { t.frozen = true; gLog('atk', `🔮 ${t.name} confused — skips next attack!`); }
+  } else if (nm === 'FIGHTING ENERGY') {
+    const t = myAll[0]; if (t) { t._xatk = (t._xatk||0) + 3; gLog('play', `🥊 ${t.name} powered up! +3w next attack!`); }
+  } else if (nm === 'DOUBLE COLORLESS') {
+    const t = myAll[0];
+    if (t) { t._xatk = (t._xatk||0) + 2; const h=Math.min(t.w,2); t.w -= h; if(h>0) dmgPop(t._uid,h,'heal'); gLog('play', `✨ ${t.name} +2w boost and healed 2w!`); }
   } else if (nm === 'HYPER POTION') {
     const t = myAll.sort((a,b) => b.w - a.w)[0];
     if (t) { t.w = Math.max(0, t.w - 5); gLog('heal', `${t.name} healed 5w!`); }
