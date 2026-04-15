@@ -527,42 +527,43 @@ li{margin-bottom:4px;line-height:1.5}
   .db-layout{grid-template-columns:1fr}
 }
 /* ── HOME PAGE ──────────────────────────────────── */
-#pg-home{background:var(--bg);min-height:100vh}
+#pg-home{background:var(--bg);height:100vh;overflow:hidden;display:flex;flex-direction:column}
 .home-page{
   display:flex;flex-direction:column;align-items:center;
-  padding:28px max(20px,env(safe-area-inset-right,20px)) max(32px,env(safe-area-inset-bottom,32px)) max(20px,env(safe-area-inset-left,20px));
-  min-height:calc(100vh - 48px);
-  box-sizing:border-box;
+  padding:16px max(16px,env(safe-area-inset-right,16px)) max(16px,env(safe-area-inset-bottom,16px)) max(16px,env(safe-area-inset-left,16px));
+  height:100%;flex:1;
+  box-sizing:border-box;overflow:hidden;
 }
 /* Logo */
 .home-logo-wrap{
   display:flex;flex-direction:column;align-items:center;
-  margin-bottom:28px;margin-top:8px;
+  margin-bottom:10px;margin-top:0;
+  flex-shrink:0;
 }
 .home-logo-img{
-  width:min(320px,85vw);height:auto;
+  width:min(220px,60vw);height:auto;
   filter:drop-shadow(0 4px 24px rgba(255,203,5,.35));
   display:block;
 }
 .home-logo-sub{
   font-family:'Black Ops One',cursive;
-  font-size:clamp(1.4rem,5vw,2.2rem);
-  letter-spacing:6px;color:#fff;
+  font-size:clamp(1rem,4vw,1.5rem);
+  letter-spacing:5px;color:#fff;
   text-shadow:0 2px 12px rgba(0,0,0,.8);
-  margin-top:-4px;
+  margin-top:-2px;
 }
 .home-logo-tag{
   font-family:'Share Tech Mono',monospace;
-  font-size:.56rem;letter-spacing:4px;
-  color:rgba(255,255,255,.28);margin-top:5px;
+  font-size:.45rem;letter-spacing:3px;
+  color:rgba(255,255,255,.28);margin-top:2px;
 }
 /* Button grid */
-.home-btns{width:100%;max-width:480px;display:flex;flex-direction:column;gap:10px}
+.home-btns{width:100%;max-width:480px;display:flex;flex-direction:column;gap:6px;flex:1;min-height:0}
 .hbtn{
-  width:100%;display:flex;align-items:center;gap:14px;
-  padding:16px 18px;
+  width:100%;display:flex;align-items:center;gap:12px;
+  padding:12px 14px;
   border-radius:14px;border:none;cursor:pointer;
-  text-align:left;
+  text-align:left;flex:1;min-height:0;
   -webkit-tap-highlight-color:transparent;
   transition:transform .12s,opacity .12s;
   position:relative;overflow:hidden;
@@ -612,10 +613,10 @@ li{margin-bottom:4px;line-height:1.5}
   box-shadow:0 4px 16px rgba(0,0,0,.4);
 }
 /* Small row */
-.hbtn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.hbtn-sm{padding:13px 14px}
-.hbtn-sm .hbtn-icon{font-size:1.4rem;width:28px}
-.hbtn-sm .hbtn-title{font-size:.75rem;letter-spacing:1.5px}
+.hbtn-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:1}
+.hbtn-sm{padding:10px 12px}
+.hbtn-sm .hbtn-icon{font-size:1.2rem;width:26px}
+.hbtn-sm .hbtn-title{font-size:.68rem;letter-spacing:1.5px}
 .hbtn-rules{
   background:linear-gradient(135deg,#1e2a1e,#162016);
   color:#fff;border:1px solid rgba(34,197,94,.2);
@@ -1008,7 +1009,7 @@ body.in-game{overflow:hidden;position:fixed;width:100%;height:100%}
     </div>
 
     <!-- Row 5: Rules + Ref + Tutorial (small) -->
-    <div class="hbtn-row" style="grid-template-columns:1fr 1fr 1fr">
+    <div class="hbtn-row" style="grid-template-columns:1fr 1fr 1fr;flex:1">
       <button class="hbtn hbtn-sm hbtn-rules" onclick="goPageBtn('rules')">
         <span class="hbtn-icon">📖</span>
         <div class="hbtn-text">
@@ -1033,7 +1034,7 @@ body.in-game{overflow:hidden;position:fixed;width:100%;height:100%}
     </div>
 
   </div>
-  <div class="home-footer-tag">v1.4 · Fan Project · Not affiliated with Nintendo</div>
+  <div class="home-footer-tag" style="font-size:.42rem;margin-top:4px;flex-shrink:0">v1.4 · Fan Project · Not affiliated with Nintendo</div>
 
 </div>
 </div>
