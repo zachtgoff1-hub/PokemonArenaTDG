@@ -438,18 +438,18 @@ li{margin-bottom:4px;line-height:1.5}
 /* Battle Feed */
 /* Event toast — single pill below D20, auto-fades */
 #eventToast{
-  position:fixed;bottom:70px;left:50%;transform:translateX(-50%);
+  position:fixed;bottom:108px;right:8px;left:auto;transform:none;
   opacity:0;pointer-events:none;z-index:590;
-  background:rgba(6,8,20,.92);border:1px solid rgba(255,255,255,.1);border-radius:8px;
-  padding:5px 14px;text-align:center;max-width:80vw;
+  background:rgba(6,8,20,.88);border:1px solid rgba(255,255,255,.1);border-radius:7px;
+  padding:4px 10px;text-align:right;max-width:52vw;
   transition:opacity .15s;
 }
 #eventToast.show{opacity:1}
-.et-icon{font-size:1rem;line-height:1;display:block;margin-bottom:2px}
-.et-msg{font-family:'Share Tech Mono',monospace;font-size:.52rem;letter-spacing:.5px;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.et-msg{font-family:'Share Tech Mono',monospace;font-size:.48rem;letter-spacing:.5px;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 /* D20 Toast */
 .d20-toast{
-  position:fixed;bottom:90px;right:10px;left:auto;transform:scale(.88);
+  position:fixed;top:auto;bottom:48%;right:8px;left:auto;
+  transform:scale(.82);
   opacity:0;pointer-events:none;z-index:600;
   background:var(--paper);border:1.5px solid;border-radius:11px;
   padding:8px 13px;text-align:center;min-width:110px;max-width:140px;transition:all .17s;
@@ -459,6 +459,8 @@ li{margin-bottom:4px;line-height:1.5}
 .d20-num{font-family:'Black Ops One',cursive;font-size:2.3rem;line-height:1}
 .d20-res{font-family:'Black Ops One',cursive;font-size:.7rem;letter-spacing:1px}
 .d20-wnd{font-family:'Share Tech Mono',monospace;font-size:.5rem;color:var(--soft);margin-top:1px}
+.d20-type{font-family:'Black Ops One',cursive;font-size:.55rem;letter-spacing:1px;margin-top:3px;animation:typeEffPop .3s ease-out}
+@keyframes typeEffPop{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
 /* Card peek */
 .card-peek{
   position:fixed;bottom:135px;left:50%;transform:translateX(-50%);
@@ -572,6 +574,22 @@ li{margin-bottom:4px;line-height:1.5}
 .hbtn-sub{font-family:'Share Tech Mono',monospace;font-size:.55rem;letter-spacing:1px;opacity:.7}
 .hbtn-arrow{font-size:1.4rem;color:rgba(255,255,255,.3);flex-shrink:0;font-family:'Black Ops One',cursive}
 /* Button colours */
+
+.hbtn-story{
+  background:linear-gradient(135deg,#1a3a1a,#0d240d);
+  color:#fff;border:1px solid rgba(34,197,94,.3);
+  box-shadow:0 6px 20px rgba(34,197,94,.2);
+}
+.hbtn-stadiums{
+  background:linear-gradient(135deg,#1a2a3a,#0d1a2a);
+  color:#fff;border:1px solid rgba(45,212,191,.3);
+  box-shadow:0 6px 20px rgba(45,212,191,.2);
+}
+.hbtn-profile{
+  background:linear-gradient(135deg,#1a1a3a,#0f0f22);
+  color:#fff;border:1px solid rgba(155,89,245,.3);
+  box-shadow:0 4px 14px rgba(0,0,0,.3);
+}
 .hbtn-play{
   background:linear-gradient(135deg,#EE1515,#b00000);
   color:#fff;
@@ -782,11 +800,11 @@ body.in-game{overflow:hidden;position:fixed;width:100%;height:100%}
   text-transform:uppercase;
 }
 @keyframes faintAnim{
-  0%  {opacity:0;transform:translateY(0) scale(.6);}
-  12% {opacity:1;transform:translateY(-10px) scale(1.15);}
-  35% {opacity:1;transform:translateY(-18px) scale(1);}
-  75% {opacity:.9;transform:translateY(-34px) scale(.95);}
-  100%{opacity:0;transform:translateY(-52px) scale(.85);}
+  0%  {opacity:0;transform:translateY(8px) scale(.7);}
+  15% {opacity:1;transform:translateY(-6px) scale(1.1);}
+  40% {opacity:1;transform:translateY(-10px) scale(1);}
+  80% {opacity:.9;transform:translateY(-18px) scale(.97);}
+  100%{opacity:0;transform:translateY(-28px) scale(.9);}
 }
 @keyframes faintSkull{
   0%  {transform:scale(0) rotate(-20deg);}
@@ -834,12 +852,68 @@ body.in-game{overflow:hidden;position:fixed;width:100%;height:100%}
 .tok-block  {background:rgba(100,100,100,.8);color:#fff;border-color:rgba(100,100,100,.5)}
 .ptok img{width:100%;height:100%;object-fit:contain;background:#0a0a18;image-rendering:pixelated;display:block}
 .ptok-hp{position:absolute;top:2px;right:2px;min-width:13px;height:13px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.3rem;font-family:'Black Ops One',cursive;color:#fff;z-index:5;border:1px solid rgba(0,0,0,.5);padding:0 2px}
+
+.hbtn-tutorial{
+  background:linear-gradient(135deg,#1a1a2e,#2a1a3a);
+  color:#fff;border:1px solid rgba(200,180,255,.3);
+  box-shadow:0 4px 14px rgba(0,0,0,.3);
+}
+#tutOverlay{position:fixed;inset:0;z-index:8000;pointer-events:none}
+#tutOverlay.active{pointer-events:auto}
+#tutBackdrop{position:absolute;inset:0;background:rgba(0,0,0,.78);transition:all .3s;display:none}
+#tutTip{position:fixed;background:var(--paper);border:2px solid var(--gold);border-radius:14px;padding:14px 16px 12px;width:min(300px,88vw);box-shadow:0 8px 32px rgba(0,0,0,.8);z-index:8100;transition:all .25s ease;pointer-events:auto}
+.tut-step-num{font-family:'Share Tech Mono',monospace;font-size:.42rem;letter-spacing:3px;color:var(--gold);margin-bottom:6px}
+.tut-title{font-family:'Black Ops One',cursive;font-size:.85rem;letter-spacing:1px;color:#fff;margin-bottom:6px;line-height:1.2}
+.tut-body{font-family:'Nunito',sans-serif;font-size:.72rem;color:rgba(255,255,255,.75);line-height:1.55;margin-bottom:10px}
+.tut-tip{background:rgba(255,203,5,.1);border:1px solid rgba(255,203,5,.25);border-radius:7px;padding:6px 9px;font-family:'Share Tech Mono',monospace;font-size:.55rem;color:var(--gold);line-height:1.4;margin-bottom:10px}
+.tut-actions{display:flex;gap:6px;align-items:center}
+.tut-btn-next{flex:1;padding:9px;border:none;border-radius:9px;cursor:pointer;background:var(--gold);color:#000;font-family:'Black Ops One',cursive;font-size:.62rem;letter-spacing:1px}
+.tut-btn-next:disabled{background:rgba(255,255,255,.15);color:rgba(255,255,255,.4);cursor:not-allowed}
+.tut-btn-skip{padding:9px 12px;border:1px solid rgba(255,255,255,.15);border-radius:9px;cursor:pointer;background:transparent;color:var(--soft);font-family:'Black Ops One',cursive;font-size:.5rem}
+.tut-progress{display:flex;gap:3px;margin-bottom:8px}
+.tut-dot{height:3px;flex:1;border-radius:2px;background:rgba(255,255,255,.15);transition:background .2s}
+.tut-dot.done{background:var(--gold)}
+.tut-dot.active{background:rgba(255,203,5,.6)}
+.tut-highlight{position:fixed;border:2.5px solid var(--gold);border-radius:10px;box-shadow:0 0 0 4px rgba(255,203,5,.25),0 0 20px rgba(255,203,5,.3);pointer-events:none;z-index:8050;transition:all .25s ease;animation:tutPulse 1.2s ease-in-out infinite}
+@keyframes tutPulse{0%,100%{box-shadow:0 0 0 4px rgba(255,203,5,.25),0 0 20px rgba(255,203,5,.3)}50%{box-shadow:0 0 0 7px rgba(255,203,5,.15),0 0 30px rgba(255,203,5,.5)}}
+
+/* ── Page home button ── */
+.page-home-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 14px;
+  background:rgba(255,255,255,.05);
+  border:1.5px solid rgba(255,255,255,.14);
+  border-radius:12px;
+  color:rgba(255,255,255,.6);
+  font-family:'Black Ops One',cursive;
+  font-size:.58rem;
+  letter-spacing:1px;
+  cursor:pointer;
+  transition:transform .12s, background .15s, border-color .15s, color .15s;
+  text-decoration:none;
+  flex-shrink:0;
+  -webkit-tap-highlight-color:transparent;
+}
+.page-home-btn:hover{
+  background:rgba(255,255,255,.1);
+  border-color:rgba(255,255,255,.3);
+  color:#fff;
+}
+.page-home-btn:active{
+  transform:scale(.94);
+  background:rgba(255,255,255,.14);
+}
+.page-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;flex-wrap:wrap;
+}
+.page-hdr h1{margin:0;flex:1;min-width:0}
 </style>
 </head>
 <body>
 
 <!-- ═══ NAV (visible on all non-game pages) ═══ -->
-<nav class="nav" id="mainNav">
+<nav class="nav" id="mainNav" style="display:none">
   <span class="nlogo">⚡ POKÉMON ARENA TCG</span>
   <button class="nbtn on"  onclick="goPage('home',this)">🏠 Home</button>
   <button class="nbtn"     onclick="goPage('col',this)">📦 Cards</button>
@@ -849,6 +923,7 @@ body.in-game{overflow:hidden;position:fixed;width:100%;height:100%}
   <button class="nbtn"     onclick="goPage('rules',this)">📖 Rules</button>
   <button class="nbtn"     onclick="goPage('profile',this)">👤 Profile</button>
   <button class="nbtn"     onclick="goPage('story',this)">⚔ Story</button>
+  <button class="nbtn"     onclick="goPage('stadiums',this)">🏟 Stadiums</button>
   <button class="nbtn"     onclick="goPage('ref',this)">🎲 Ref</button>
 </nav>
 
@@ -863,51 +938,89 @@ body.in-game{overflow:hidden;position:fixed;width:100%;height:100%}
     <div class="home-logo-tag">GEN I · 151 POKÉMON · FAN MADE</div>
   </div>
 
-  <!-- Big nav buttons -->
+  <!-- Big nav buttons — new order -->
   <div class="home-btns">
 
-    <button class="hbtn hbtn-play" onclick="goPageBtn('play')">
-      <span class="hbtn-icon">⚔</span>
-      <div class="hbtn-text">
-        <span class="hbtn-title">PLAY vs CPU</span>
-        <span class="hbtn-sub">Battle the AI</span>
-      </div>
-      <span class="hbtn-arrow">›</span>
-    </button>
-
-    <button class="hbtn hbtn-pvp" onclick="goPageBtn('pvp')">
-      <span class="hbtn-icon">🆚</span>
-      <div class="hbtn-text">
-        <span class="hbtn-title">1v1 BATTLE</span>
-        <span class="hbtn-sub">Pass &amp; Play</span>
-      </div>
-      <span class="hbtn-arrow">›</span>
-    </button>
-
-    <button class="hbtn hbtn-deck" onclick="goPageBtn('deck')">
-      <span class="hbtn-icon">🃏</span>
-      <div class="hbtn-text">
-        <span class="hbtn-title">DECK BUILDER</span>
-        <span class="hbtn-sub">Build your team</span>
-      </div>
-      <span class="hbtn-arrow">›</span>
-    </button>
-
-    <button class="hbtn hbtn-cards" onclick="goPageBtn('col')">
-      <span class="hbtn-icon">📦</span>
-      <div class="hbtn-text">
-        <span class="hbtn-title">CARD COLLECTION</span>
-        <span class="hbtn-sub">All 151 Pokémon</span>
-      </div>
-      <span class="hbtn-arrow">›</span>
-    </button>
-
+    <!-- Row 1: Story + Play CPU (top priority) -->
     <div class="hbtn-row">
+      <button class="hbtn hbtn-story" onclick="goPageBtn('story')">
+        <span class="hbtn-icon">⚔</span>
+        <div class="hbtn-text">
+          <span class="hbtn-title">GYM CHALLENGE</span>
+          <span class="hbtn-sub">Story mode</span>
+        </div>
+        <span class="hbtn-arrow">›</span>
+      </button>
+      <button class="hbtn hbtn-play" onclick="goPageBtn('play')">
+        <span class="hbtn-icon">🎮</span>
+        <div class="hbtn-text">
+          <span class="hbtn-title">PLAY vs CPU</span>
+          <span class="hbtn-sub">Quick battle</span>
+        </div>
+        <span class="hbtn-arrow">›</span>
+      </button>
+    </div>
+
+    <!-- Row 2: Stadiums (full width, featured) -->
+    <button class="hbtn hbtn-stadiums" onclick="goPageBtn('stadiums')">
+      <span class="hbtn-icon">🏟</span>
+      <div class="hbtn-text">
+        <span class="hbtn-title">STADIUMS</span>
+        <span class="hbtn-sub">5 venues · 15 trainers · Type matchups</span>
+      </div>
+      <span class="hbtn-arrow">›</span>
+    </button>
+
+    <!-- Row 3: 1v1 + Deck Builder -->
+    <div class="hbtn-row">
+      <button class="hbtn hbtn-pvp" onclick="goPageBtn('pvp')">
+        <span class="hbtn-icon">🆚</span>
+        <div class="hbtn-text">
+          <span class="hbtn-title">1v1 BATTLE</span>
+          <span class="hbtn-sub">Pass &amp; Play</span>
+        </div>
+      </button>
+      <button class="hbtn hbtn-deck" onclick="goPageBtn('deck')">
+        <span class="hbtn-icon">🃏</span>
+        <div class="hbtn-text">
+          <span class="hbtn-title">DECK BUILDER</span>
+          <span class="hbtn-sub">Build your team</span>
+        </div>
+      </button>
+    </div>
+
+    <!-- Row 4: Cards + Profile -->
+    <div class="hbtn-row">
+      <button class="hbtn hbtn-sm hbtn-cards" onclick="goPageBtn('col')">
+        <span class="hbtn-icon">📦</span>
+        <div class="hbtn-text">
+          <span class="hbtn-title">CARDS</span>
+          <span class="hbtn-sub">All 151 Pokémon</span>
+        </div>
+      </button>
+      <button class="hbtn hbtn-sm hbtn-profile" onclick="goPageBtn('profile')">
+        <span class="hbtn-icon">👤</span>
+        <div class="hbtn-text">
+          <span class="hbtn-title">PROFILE</span>
+          <span class="hbtn-sub">Your stats</span>
+        </div>
+      </button>
+    </div>
+
+    <!-- Row 5: Rules + Ref + Tutorial (small) -->
+    <div class="hbtn-row" style="grid-template-columns:1fr 1fr 1fr">
       <button class="hbtn hbtn-sm hbtn-rules" onclick="goPageBtn('rules')">
         <span class="hbtn-icon">📖</span>
         <div class="hbtn-text">
           <span class="hbtn-title">RULES</span>
           <span class="hbtn-sub">How to play</span>
+        </div>
+      </button>
+      <button class="hbtn hbtn-sm hbtn-tutorial" onclick="startTutorial()">
+        <span class="hbtn-icon">🎓</span>
+        <div class="hbtn-text">
+          <span class="hbtn-title">TUTORIAL</span>
+          <span class="hbtn-sub">Learn to play</span>
         </div>
       </button>
       <button class="hbtn hbtn-sm hbtn-ref" onclick="goPageBtn('ref')">
@@ -920,23 +1033,6 @@ body.in-game{overflow:hidden;position:fixed;width:100%;height:100%}
     </div>
 
   </div>
-
-    <div class="hbtn-row" style="margin-top:4px">
-      <button class="hbtn hbtn-sm hbtn-story" onclick="goPageBtn('story')">
-        <span class="hbtn-icon">⚔</span>
-        <div class="hbtn-text">
-          <span class="hbtn-title">STORY</span>
-          <span class="hbtn-sub">Gym challenge</span>
-        </div>
-      </button>
-      <button class="hbtn hbtn-sm hbtn-profile" onclick="goPageBtn('profile')">
-        <span class="hbtn-icon">👤</span>
-        <div class="hbtn-text">
-          <span class="hbtn-title">PROFILE</span>
-          <span class="hbtn-sub">Your stats</span>
-        </div>
-      </button>
-    </div>
   <div class="home-footer-tag">v1.4 · Fan Project · Not affiliated with Nintendo</div>
 
 </div>
@@ -945,7 +1041,7 @@ body.in-game{overflow:hidden;position:fixed;width:100%;height:100%}
 <!-- ═══ COLLECTION ═══ -->
 <div class="pg" id="pg-col"><div class="wrap">
 <div class="sec" style="--acc:var(--gold)">
-  <h1>📦 <em>Card Collection</em></h1>
+  <div class="page-hdr"><h1>📦 <em>Card Collection</em></h1><button class="page-home-btn" onclick="goPageBtn('home')">🏠 Home</button></div>
   <div class="tag">Gen I · 151 Pokémon · Click any card to inspect</div>
 </div>
 <div class="sec" style="--acc:var(--blue)">
@@ -984,6 +1080,7 @@ body.in-game{overflow:hidden;position:fixed;width:100%;height:100%}
   <!-- Row 1: Title + toggle + count + progress bar -->
   <div style="display:flex;align-items:center;gap:8px;padding:10px 14px 8px;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,.07)">
     <div id="dbPreviewTitle" style="font-family:'Black Ops One',cursive;font-size:.72rem;letter-spacing:1px;color:var(--blue)">🔵 YOUR DECK</div>
+    <button class="page-home-btn" onclick="goPageBtn('home')">🏠 Home</button>
     <button onclick="dbToggleEditing()" id="dbToggleBtn" style="padding:3px 10px;background:rgba(238,21,21,.12);border:1px solid rgba(238,21,21,.3);border-radius:10px;color:var(--red);font-family:'Black Ops One',cursive;font-size:.46rem;cursor:pointer;white-space:nowrap">Switch to 🔴 Opponent</button>
     <div style="display:flex;align-items:center;gap:6px;margin-left:auto">
       <div style="width:70px;height:5px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden">
@@ -1170,7 +1267,7 @@ body.in-game{overflow:hidden;position:fixed;width:100%;height:100%}
 <!-- ═══ PROFILE ═══ -->
 <div class="pg" id="pg-profile"><div class="wrap">
 <div class="sec" style="--acc:var(--el)">
-  <h1>👤 <em>Trainer Profile</em></h1>
+  <div class="page-hdr"><h1>👤 <em>Trainer Profile</em></h1><button class="page-home-btn" onclick="goPageBtn('home')">🏠 Home</button></div>
   <div class="tag">Stats · History · Achievements</div>
 </div>
 <div class="sec" style="--acc:var(--blue);padding:0">
@@ -1181,7 +1278,7 @@ body.in-game{overflow:hidden;position:fixed;width:100%;height:100%}
 <!-- ═══ STORY ═══ -->
 <div class="pg" id="pg-story"><div class="wrap">
 <div class="sec" style="--acc:var(--red)">
-  <h1>⚔ <em>Gym Challenge</em></h1>
+  <div class="page-hdr"><h1>⚔ <em>Gym Challenge</em></h1><button class="page-home-btn" onclick="goPageBtn('home')">🏠 Home</button></div>
   <div class="tag">Kanto · 8 Gym Leaders · Final Boss: Gary Oak</div>
 </div>
 <div class="sec" style="--acc:var(--gold);padding:0">
@@ -1190,9 +1287,21 @@ body.in-game{overflow:hidden;position:fixed;width:100%;height:100%}
 </div></div>
 
 
+
+<!-- ═══ STADIUMS ═══ -->
+<div class="pg" id="pg-stadiums"><div class="wrap">
+<div class="sec" style="--acc:var(--teal)">
+  <div class="page-hdr"><h1>🏟 <em>Stadiums</em></h1><button class="page-home-btn" onclick="goPageBtn('home')">🏠 Home</button></div>
+  <div class="tag">Special battle venues · Each stadium has themed trainer sets</div>
+</div>
+<div class="sec" style="--acc:var(--gold);padding:0;overflow:hidden">
+  <div id="stadiumsContent"></div>
+</div>
+</div></div>
+
 <!-- ═══ RULES ═══ -->
 <div class="pg" id="pg-rules"><div class="wrap">
-<div class="sec" style="--acc:var(--gold)"><h1>📖 Rules <em>&amp; Gameplay</em></h1><div class="tag">Complete rulebook</div></div>
+<div class="sec" style="--acc:var(--gold)"><div class="page-hdr"><h1>📖 Rules <em>&amp; Gameplay</em></h1><button class="page-home-btn" onclick="goPageBtn('home')">🏠 Home</button></div><div class="tag">Complete rulebook</div></div>
 <div class="sec" style="--acc:var(--electric)">
   <h2>⚡ Energy System</h2>
   <p>Each deck has <b>10 Energy Cards</b>. Start with 2 face-up (2⚡). Each turn: refresh spent cards, flip 1 new one. Rotate sideways to spend. Max 10⚡.</p>
@@ -1257,7 +1366,7 @@ body.in-game{overflow:hidden;position:fixed;width:100%;height:100%}
 
 <!-- ═══ QUICK REF ═══ -->
 <div class="pg" id="pg-ref"><div class="wrap">
-<div class="sec" style="--acc:var(--gold)"><h1>🎲 Quick <em>Reference</em></h1></div>
+<div class="sec" style="--acc:var(--gold)"><div class="page-hdr"><h1>🎲 Quick <em>Reference</em></h1><button class="page-home-btn" onclick="goPageBtn('home')">🏠 Home</button></div></div>
 <div class="sec" style="--acc:var(--blue)"><h2>Turn Order</h2><div class="steps">
   <div class="step"><div class="step-n">1</div><div class="step-v"><b>Deploy</b> — pay Energy, Back row (Fast → Front)</div></div>
   <div class="step"><div class="step-n">2</div><div class="step-v"><b>Advance</b> — Back→Front→Neutral automatically</div></div>
@@ -1322,7 +1431,7 @@ const CARDS = [
 {id:'f02',pid:5,  name:'CHARMELEON', ptype:'fire',gtype:'Physical',rarity:'rare',   elixir:3,wounds:4,speed:'🧍',passive:null,
  cs:'+2w to target. If target already wounded: +1w bonus.',quote:'Vicious in battle. Tears foes with sharp claws.'},
 
-{id:'f03',pid:6,  name:'CHARIZARD',  ptype:'fire',gtype:'Flying',  rarity:'legend', elixir:7,wounds:7,speed:'⚡',
+{id:'f03',pid:6,  name:'CHARIZARD',  ptype:'fire',gtype:'Physical',  rarity:'legend', elixir:7,wounds:7,speed:'⚡',
  passive:'ON DEPLOY: Flame Burst — deal 1w to all enemies in this zone.',
  cs:'+3w to target AND leap to enemy Back row.',quote:'Its fire can melt anything.'},
 
@@ -1351,7 +1460,7 @@ const CARDS = [
 {id:'f11',pid:136,name:'FLAREON',    ptype:'fire',gtype:'Special',rarity:'rare',   elixir:4,wounds:4,speed:'🧍',passive:null,
  cs:'+3w to target. Flare-Up: Flareon always burns bright.',quote:'Body temperature over 1650°F.'},
 
-{id:'f12',pid:146,name:'MOLTRES',    ptype:'fire',gtype:'Flying',  rarity:'legend', elixir:8,wounds:7,speed:'🐢',
+{id:'f12',pid:146,name:'MOLTRES',    ptype:'fire',gtype:'Physical',  rarity:'legend', elixir:8,wounds:7,speed:'🐢',
  passive:'ON FAINT: +2w to every card in this row both sides.',
  cs:'+3w AND +1w to ALL enemies in this lane.',quote:'A gust of its wings sets the air on fire.'},
 
@@ -1398,10 +1507,10 @@ const CARDS = [
 {id:'w14',pid:87, name:'DEWGONG',    ptype:'water',gtype:'Physical',rarity:'rare',   elixir:4,wounds:4,speed:'🧍',passive:null,
  cs:'+2w AND freeze target for 1 turn.',quote:'Loves to snooze on cold ice. Very strong swimmer.'},
 
-{id:'w15',pid:90, name:'SHELLDER',   ptype:'water',gtype:'Stadium', rarity:'common', elixir:2,wounds:2,speed:null,  passive:null,
+{id:'w15',pid:90, name:'SHELLDER',   ptype:'water',gtype:'Defender', rarity:'common', elixir:2,wounds:2,speed:null,  passive:null,
  cs:'+1w to all enemies in this zone.',quote:'Fights using its tough shell. Rarely swims.'},
 
-{id:'w16',pid:91, name:'CLOYSTER',   ptype:'water',gtype:'Stadium', rarity:'rare',   elixir:4,wounds:5,speed:null,
+{id:'w16',pid:91, name:'CLOYSTER',   ptype:'water',gtype:'Defender', rarity:'rare',   elixir:4,wounds:5,speed:null,
  passive:'ON DEPLOY: Deal 1w to all enemies in this zone.',
  cs:'+2w to all enemies in zone. Spike Cannon.',quote:'Once shut, impossible to open.'},
 
@@ -1429,7 +1538,7 @@ const CARDS = [
 {id:'w24',pid:121,name:'STARMIE',    ptype:'water',gtype:'Special', rarity:'rare',   elixir:5,wounds:4,speed:'⚡', passive:null,
  cs:'+2w AND rotate one of your friendly D6s back 1 face (heal 1w).',quote:'Said to be from outer space.'},
 
-{id:'w25',pid:130,name:'GYARADOS',   ptype:'water',gtype:'Flying',  rarity:'legend', elixir:7,wounds:7,speed:'⚡',
+{id:'w25',pid:130,name:'GYARADOS',   ptype:'water',gtype:'Physical',  rarity:'legend', elixir:7,wounds:7,speed:'⚡',
  passive:'ON DEPLOY: Deal 1w to all enemies in zone.',
  cs:'Hyper Beam — +4w. Skip your next attack (recharge).',quote:'Once it begins to rampage, it will not stop.'},
 
@@ -1440,10 +1549,10 @@ const CARDS = [
  passive:'ON DEPLOY: Heal 1w off your most wounded ally.',
  cs:'Aqua Ring — heal 1w off self at start of next turn.',quote:'Its cellular structure is similar to water molecules.'},
 
-{id:'w28',pid:138,name:'OMANYTE',    ptype:'water',gtype:'Stadium', rarity:'rare',   elixir:3,wounds:3,speed:null,  passive:null,
+{id:'w28',pid:138,name:'OMANYTE',    ptype:'water',gtype:'Defender', rarity:'rare',   elixir:3,wounds:3,speed:null,  passive:null,
  cs:'+2w to all enemies in zone.',quote:'A prehistoric fossil resurrected in a lab.'},
 
-{id:'w29',pid:139,name:'OMASTAR',    ptype:'water',gtype:'Stadium', rarity:'epic',   elixir:5,wounds:5,speed:null,
+{id:'w29',pid:139,name:'OMASTAR',    ptype:'water',gtype:'Defender', rarity:'epic',   elixir:5,wounds:5,speed:null,
  passive:'ON DEPLOY: Deal 1w to all enemies in zone.',
  cs:'+3w AND +1w to all others in zone.',quote:'Its heavy shell made it unable to move.'},
 
@@ -1498,7 +1607,7 @@ const CARDS = [
  passive:'ON FAINT: +1w to every enemy in same zone.',
  cs:'+2w AND push target back 1 row.',quote:'Each of its three heads thinks different thoughts.'},
 
-{id:'g14',pid:114,name:'TANGELA',   ptype:'grass',gtype:'Stadium', rarity:'rare',   elixir:3,wounds:4,speed:null,  passive:null,
+{id:'g14',pid:114,name:'TANGELA',   ptype:'grass',gtype:'Defender', rarity:'rare',   elixir:3,wounds:4,speed:null,  passive:null,
  cs:'Constrict — +2w AND target cannot advance next turn.',quote:'Blue vines all over its body.'},
 
 // ══ ELECTRIC ══
@@ -1508,10 +1617,10 @@ const CARDS = [
 {id:'e02',pid:26, name:'RAICHU',     ptype:'electric',gtype:'Special',rarity:'epic',   elixir:4,wounds:4,speed:'⚡',passive:null,
  cs:'+3w. Tail discharges electricity to protect it.',quote:'Its tail discharges electricity into the ground.'},
 
-{id:'e03',pid:81, name:'MAGNEMITE',  ptype:'electric',gtype:'Stadium', rarity:'common', elixir:2,wounds:2,speed:null, passive:null,
+{id:'e03',pid:81, name:'MAGNEMITE',  ptype:'electric',gtype:'Defender', rarity:'common', elixir:2,wounds:2,speed:null, passive:null,
  cs:'+1w to one enemy anywhere on the board.',quote:'Floats using electromagnetic levitation.'},
 
-{id:'e04',pid:82, name:'MAGNETON',   ptype:'electric',gtype:'Stadium', rarity:'rare',   elixir:4,wounds:4,speed:null, passive:null,
+{id:'e04',pid:82, name:'MAGNETON',   ptype:'electric',gtype:'Defender', rarity:'rare',   elixir:4,wounds:4,speed:null, passive:null,
  cs:'+2w to one target anywhere on the board.',quote:'Formed by three Magnemite linked together.'},
 
 {id:'e05',pid:100,name:'VOLTORB',    ptype:'electric',gtype:'Special',rarity:'common', elixir:2,wounds:2,speed:'⚡',
@@ -1528,7 +1637,7 @@ const CARDS = [
 {id:'e08',pid:135,name:'JOLTEON',    ptype:'electric',gtype:'Special',rarity:'rare',   elixir:3,wounds:3,speed:'⚡',passive:null,
  cs:'+2w. Roll D6: on 4+ hit a second target for +1w.',quote:'Blasts 10,000-volt lightning bolts.'},
 
-{id:'e09',pid:145,name:'ZAPDOS',     ptype:'electric',gtype:'Flying',  rarity:'legend', elixir:8,wounds:7,speed:'⚡',
+{id:'e09',pid:145,name:'ZAPDOS',     ptype:'electric',gtype:'Physical',  rarity:'legend', elixir:8,wounds:7,speed:'⚡',
  passive:'ON DEPLOY: Thunderclap — deal 1w to all enemies in zone.',
  cs:'Discharge — +2w to ALL enemies in this lane.',quote:'A legendary bird that appears when lightning strikes.'},
 
@@ -1563,7 +1672,7 @@ const CARDS = [
 {id:'p08',pid:151,name:'MEW',        ptype:'psychic',gtype:'Special', rarity:'legend', elixir:7,wounds:6,speed:'⚡',passive:null,
  cs:'Transform — copy last CS effect used this game.',quote:'So rare it is still said to be a mirage.'},
 
-{id:'p09',pid:137,name:'PORYGON',    ptype:'psychic',gtype:'Stadium', rarity:'rare',   elixir:4,wounds:4,speed:null, passive:null,
+{id:'p09',pid:137,name:'PORYGON',    ptype:'psychic',gtype:'Defender', rarity:'rare',   elixir:4,wounds:4,speed:null, passive:null,
  cs:'Conversion — copy target\'s type. +2w.',quote:'A man-made Pokémon created entirely by humans.'},
 
 // ══ FIGHTING ══
@@ -1609,10 +1718,10 @@ const CARDS = [
 {id:'po02',pid:24, name:'ARBOK',     ptype:'poison',gtype:'Physical',rarity:'rare',   elixir:4,wounds:4,speed:'⚡',passive:null,
  cs:'+2w AND push target back 1 row (constrict).',quote:'The pattern on its belly is terrifingly intimidating.'},
 
-{id:'po03',pid:41, name:'ZUBAT',     ptype:'poison',gtype:'Flying',  rarity:'common', elixir:2,wounds:2,speed:'⚡',passive:null,
+{id:'po03',pid:41, name:'ZUBAT',     ptype:'poison',gtype:'Physical',  rarity:'common', elixir:2,wounds:2,speed:'⚡',passive:null,
  cs:'Roll D6. On 4+: +1w bonus.',quote:'Emits ultrasonic cries to navigate in darkness.'},
 
-{id:'po04',pid:42, name:'GOLBAT',    ptype:'poison',gtype:'Flying',  rarity:'rare',   elixir:4,wounds:4,speed:'⚡',passive:null,
+{id:'po04',pid:42, name:'GOLBAT',    ptype:'poison',gtype:'Physical',  rarity:'rare',   elixir:4,wounds:4,speed:'⚡',passive:null,
  cs:'+2w AND drain 1w off target (Leech Life).',quote:'Drinks more than its fill of blood in one sitting.'},
 
 {id:'po05',pid:88, name:'GRIMER',    ptype:'poison',gtype:'Physical',rarity:'common', elixir:2,wounds:2,speed:'🐢',passive:null,
@@ -1630,13 +1739,13 @@ const CARDS = [
  cs:'+2w AND Smokescreen — enemies in zone miss their next attack.',quote:'If one head grows, the other shrinks.'},
 
 // ══ NORMAL ══
-{id:'n01',pid:16, name:'PIDGEY',     ptype:'normal',gtype:'Flying',  rarity:'common', elixir:1,wounds:1,speed:'⚡',passive:null,
+{id:'n01',pid:16, name:'PIDGEY',     ptype:'normal',gtype:'Physical',  rarity:'common', elixir:1,wounds:1,speed:'⚡',passive:null,
  cs:'Roll D6. On 4+: +1w bonus.',quote:'A common sight in forests and woods.'},
 
-{id:'n02',pid:17, name:'PIDGEOTTO',  ptype:'normal',gtype:'Flying',  rarity:'rare',   elixir:3,wounds:3,speed:'⚡',passive:null,
+{id:'n02',pid:17, name:'PIDGEOTTO',  ptype:'normal',gtype:'Physical',  rarity:'rare',   elixir:3,wounds:3,speed:'⚡',passive:null,
  cs:'+2w AND advance 1 extra row.',quote:'Very protective of its vast territory.'},
 
-{id:'n03',pid:18, name:'PIDGEOT',    ptype:'normal',gtype:'Flying',  rarity:'epic',   elixir:5,wounds:5,speed:'⚡',passive:null,
+{id:'n03',pid:18, name:'PIDGEOT',    ptype:'normal',gtype:'Physical',  rarity:'epic',   elixir:5,wounds:5,speed:'⚡',passive:null,
  cs:'+3w AND advance 1 row. Gust pushes all others in zone back.',quote:'Searches for prey from great heights.'},
 
 {id:'n04',pid:19, name:'RATTATA',    ptype:'normal',gtype:'Physical',rarity:'common', elixir:1,wounds:1,speed:'⚡',passive:null,
@@ -1654,7 +1763,7 @@ const CARDS = [
 {id:'n08',pid:39, name:'JIGGLYPUFF', ptype:'normal',gtype:'Physical',rarity:'rare',   elixir:3,wounds:4,speed:'🧍',passive:null,
  cs:'Sing — freeze all enemies in zone for 1 turn.',quote:'Its song puts everyone around it to sleep.'},
 
-{id:'n09',pid:40, name:'WIGGLYTUFF', ptype:'normal',gtype:'Stadium',rarity:'rare',   elixir:4,wounds:4,speed:'🧍',
+{id:'n09',pid:40, name:'WIGGLYTUFF', ptype:'normal',gtype:'Defender',rarity:'rare',   elixir:4,wounds:4,speed:'🧍',
  passive:'ON DEPLOY: Sing — freeze one enemy in zone.',
  cs:'+2w AND freeze all enemies in zone.',quote:'Its fur is so fine and soft, it will put you to sleep.'},
 
@@ -1664,13 +1773,13 @@ const CARDS = [
 {id:'n11',pid:53, name:'PERSIAN',    ptype:'normal',gtype:'Physical',rarity:'rare',   elixir:3,wounds:3,speed:'⚡',passive:null,
  cs:'+2w AND advance 1 extra row. Cat agility.',quote:'Walks with all the grace of a proud Pokémon.'},
 
-{id:'n12',pid:83, name:'FARFETCHD',  ptype:'normal',gtype:'Flying',  rarity:'rare',   elixir:3,wounds:3,speed:'⚡',passive:null,
+{id:'n12',pid:83, name:'FARFETCHD',  ptype:'normal',gtype:'Physical',  rarity:'rare',   elixir:3,wounds:3,speed:'⚡',passive:null,
  cs:'+2w AND advance 1 extra row (Leek Slash).',quote:'Lives with a plant stalk as its weapon and dietary staple.'},
 
-{id:'n13',pid:84, name:'DODUO',      ptype:'normal',gtype:'Flying',  rarity:'common', elixir:2,wounds:2,speed:'⚡',passive:null,
+{id:'n13',pid:84, name:'DODUO',      ptype:'normal',gtype:'Physical',  rarity:'common', elixir:2,wounds:2,speed:'⚡',passive:null,
  cs:'Roll D6. On 4+: +1w bonus.',quote:'Makes up for inability to fly with fast feet.'},
 
-{id:'n14',pid:85, name:'DODRIO',     ptype:'normal',gtype:'Flying',  rarity:'rare',   elixir:4,wounds:4,speed:'⚡',passive:null,
+{id:'n14',pid:85, name:'DODRIO',     ptype:'normal',gtype:'Physical',  rarity:'rare',   elixir:4,wounds:4,speed:'⚡',passive:null,
  cs:'+2w AND +1w to one other (Triple Peck).',quote:'Uses three sets of lungs to run non-stop.'},
 
 {id:'n15',pid:108,name:'LICKITUNG',  ptype:'normal',gtype:'Physical',rarity:'rare',   elixir:4,wounds:4,speed:'🐢',passive:null,
@@ -1694,7 +1803,7 @@ const CARDS = [
 {id:'n20',pid:133,name:'EEVEE',      ptype:'normal',gtype:'Physical',rarity:'common', elixir:2,wounds:2,speed:'⚡',passive:null,
  cs:'Roll D6. On 4+: +1w bonus.',quote:'Its genetic code is irregular and unstable.'},
 
-{id:'n21',pid:143,name:'SNORLAX',    ptype:'normal', gtype:'Stadium', rarity:'epic',   elixir:6,wounds:7,speed:null,
+{id:'n21',pid:143,name:'SNORLAX',    ptype:'normal', gtype:'Defender', rarity:'epic',   elixir:6,wounds:7,speed:null,
  passive:'ON DEPLOY: Block — cannot advance. Enemies must destroy it to pass.',
  cs:'Body Slam — +3w to ALL enemies in this zone.',quote:'Not satisfied unless it eats over 900 pounds a day.'},
 
@@ -1717,23 +1826,23 @@ const CARDS = [
 {id:'r06',pid:75, name:'GRAVELER',   ptype:'rock',gtype:'Physical',rarity:'rare',   elixir:4,wounds:4,speed:'🐢',passive:null,
  cs:'+2w AND push target back 1 row (Roll).',quote:'Rolls down slopes without a care.'},
 
-{id:'r07',pid:76, name:'GOLEM',      ptype:'rock',gtype:'Stadium',rarity:'epic',   elixir:6,wounds:8,speed:'🐢',
+{id:'r07',pid:76, name:'GOLEM',      ptype:'rock',gtype:'Defender',rarity:'epic',   elixir:6,wounds:8,speed:'🐢',
  passive:'ON FAINT: +2w to every other card in this row, both sides.',
  cs:'+2w AND push target back 1 row.',quote:'It sheds its skin every year.'},
 
-{id:'r08',pid:95, name:'ONIX',       ptype:'rock',gtype:'Stadium',rarity:'rare',   elixir:4,wounds:5,speed:'🧍',passive:null,
+{id:'r08',pid:95, name:'ONIX',       ptype:'rock',gtype:'Defender',rarity:'rare',   elixir:4,wounds:5,speed:'🧍',passive:null,
  cs:'+2w AND all enemies take +1w next turn (Bind).',quote:'As it grows, the stone portions become rounder.'},
 
 {id:'r09',pid:104,name:'CUBONE',     ptype:'rock',gtype:'Physical',rarity:'common', elixir:2,wounds:2,speed:'🧍',passive:null,
  cs:'Roll D6. On 4+: +1w bonus.',quote:'Wears the skull of its dead mother.'},
 
-{id:'r10',pid:105,name:'MAROWAK',    ptype:'rock',gtype:'Stadium',rarity:'rare',   elixir:4,wounds:4,speed:'🧍',passive:null,
+{id:'r10',pid:105,name:'MAROWAK',    ptype:'rock',gtype:'Defender',rarity:'rare',   elixir:4,wounds:4,speed:'🧍',passive:null,
  cs:'+3w to target. Bone Club ignores defense.',quote:'A skull Pokémon. Wields a bone as a lethal weapon.'},
 
 {id:'r11',pid:111,name:'RHYHORN',    ptype:'rock',gtype:'Physical',rarity:'rare',   elixir:4,wounds:5,speed:'🐢',passive:null,
  cs:'+2w AND push all enemies in zone back 1 row.',quote:'One-track mind. Extremely inattentive.'},
 
-{id:'r12',pid:112,name:'RHYDON',     ptype:'rock',gtype:'Stadium',rarity:'epic',   elixir:6,wounds:7,speed:'🐢',
+{id:'r12',pid:112,name:'RHYDON',     ptype:'rock',gtype:'Defender',rarity:'epic',   elixir:6,wounds:7,speed:'🐢',
  passive:'ON DEPLOY: Horn Drill — deal 1w to all enemies in zone.',
  cs:'+3w AND push target back 1 row.',quote:'Its rhino horn can bore through diamond.'},
 
@@ -1741,7 +1850,7 @@ const CARDS = [
 {id:'i01',pid:87, name:'DEWGONG (ICE)',ptype:'ice',gtype:'Physical',rarity:'rare',   elixir:4,wounds:4,speed:'🧍',passive:null,
  cs:'+2w AND freeze target for 1 turn.',quote:'Loves to snooze on cold ice.'},
 
-{id:'i02',pid:144,name:'ARTICUNO',   ptype:'ice',gtype:'Flying',  rarity:'legend', elixir:7,wounds:6,speed:'🐢',
+{id:'i02',pid:144,name:'ARTICUNO',   ptype:'ice',gtype:'Physical',  rarity:'legend', elixir:7,wounds:6,speed:'🐢',
  passive:'ON FAINT: Freeze all enemies in this zone.',
  cs:'Blizzard — freeze ALL enemies in this lane.',quote:'A mythical bird that can control ice.'},
 
@@ -1751,12 +1860,12 @@ const CARDS = [
 {id:'d02',pid:148,name:'DRAGONAIR',  ptype:'dragon',gtype:'Physical',rarity:'rare',   elixir:5,wounds:4,speed:'🧍',passive:null,
  cs:'+2w AND freeze one other enemy in zone.',quote:'If it exhales, the weather changes instantly.'},
 
-{id:'d03',pid:149,name:'DRAGONITE',  ptype:'dragon',gtype:'Flying',  rarity:'legend', elixir:7,wounds:7,speed:'⚡',
+{id:'d03',pid:149,name:'DRAGONITE',  ptype:'dragon',gtype:'Physical',  rarity:'legend', elixir:7,wounds:7,speed:'⚡',
  passive:'ON DEPLOY: Deal 1w to all enemies in zone (dive bomb).',
  cs:'Hyper Beam — +5w. No D20 needed.',quote:'Its wings become more powerful the longer it flies.'},
 
 // ══ FLYING ONLY ══
-{id:'fly01',pid:142,name:'AERODACTYL',ptype:'rock', gtype:'Flying',  rarity:'legend', elixir:7,wounds:6,speed:'⚡',
+{id:'fly01',pid:142,name:'AERODACTYL',ptype:'rock', gtype:'Physical',  rarity:'legend', elixir:7,wounds:6,speed:'⚡',
  passive:'ON DEPLOY: Sonic Boom — deal 1w to all enemies in zone.',
  cs:'+3w AND advance 1 row. Screech: all enemies -1w threshold.',quote:'A primeval Pokémon resurrected from old amber.'},
 
@@ -1890,14 +1999,14 @@ function goPage(id, btn) {
   });
   document.querySelectorAll('.nbtn').forEach(b => b.classList.remove('on'));
   const pg = document.getElementById('pg-' + id);
-  if (pg) { pg.classList.add('on'); pg.style.display = 'block'; }
+  if (pg) { pg.classList.add('on'); pg.style.display = (id==='play'||id==='pvp') ? 'flex' : 'block'; }
   if (btn) btn.classList.add('on');
   const inGame = (id === 'play');
   const onHome = (id === 'home');
   document.body.classList.toggle('in-game', inGame);
   const nav = document.getElementById('mainNav');
   const footer = document.querySelector('.footer');
-  if (nav) nav.style.display = (inGame || onHome) ? 'none' : '';
+  if (nav) nav.style.display = 'none';
   if (footer) footer.style.display = (inGame || onHome) ? 'none' : '';
   if (id === 'play') {
     const sp = document.getElementById('startPopup');
@@ -1911,6 +2020,7 @@ function goPage(id, btn) {
   if (id === 'deck') renderDB();
   if (id === 'profile') renderProfile();
   if (id === 'story') renderStory();
+  if (id === 'stadiums') renderStadiums();
 }
 function goPageBtn(id) {
   const btn = document.querySelector(`#mainNav .nbtn[onclick*="'${id}'"]`);
@@ -2196,17 +2306,17 @@ function dbUpdateInfo() {
   el.innerHTML = `<span style="font-family:'Black Ops One',cursive;font-size:.7rem;color:${col}">${deck.length}</span><span style="font-size:.5rem;color:var(--mut)"> / 16</span>`;
   // Requirements: sensible checks based on what actually exists in the card pool
   const hasPhys  = deck.some(c => c.gtype === 'Physical');
-  const hasFly   = deck.some(c => c.gtype === 'Flying');
+  const hasFly   = deck.some(c => c.rarity === 'rare' || c.rarity === 'epic' || c.rarity === 'legend');
   const hasSpec  = deck.some(c => c.gtype === 'Special');
-  const hasStad  = deck.some(c => c.gtype === 'Stadium');
+  const hasStad  = deck.some(c => c.gtype === 'Defender');
   const hasTrain = deck.some(c => c.gtype === 'Trainer');
   const hasEnergy= deck.some(c => c.ptype === 'energy');
   const is16     = deck.length === 16;
   const checks = [
     ['⚔ Fighter',   hasPhys,  'At least 1 Physical Pokémon'],
-    ['🦅 Flier',    hasFly,   'At least 1 Flying Pokémon'],
+    ['⭐ Rare+',    hasFly,   'At least 1 Rare, Epic or Legend card'],
     ['🔮 Special',  hasSpec,  'At least 1 Special Pokémon'],
-    ['🏟 Tank',     hasStad,  'At least 1 Stadium Pokémon'],
+    ['🛡 Defender', hasStad,  'At least 1 Defender Pokémon'],
     ['🎒 Trainer',  hasTrain, 'At least 1 Trainer card'],
     ['⚡ Energy',   hasEnergy,'At least 1 Energy card'],
     ['16 cards',    is16,     'Exactly 16 cards in deck'],
@@ -2315,7 +2425,7 @@ function dbRandomize() {
   const pick = (arr) => arr[Math.floor(Math.random()*arr.length)];
   const addUniq = (c) => { if (c && deck.filter(x=>x.id===c.id).length < 2 && deck.length < 16) deck.push(c); };
   // Guarantee one of each required type
-  ['Physical','Flying','Special','Stadium'].forEach(gt => {
+  ['Physical','Flying','Special','Defender'].forEach(gt => {
     const opts = byType(gt); if (opts.length) addUniq(pick(opts));
   });
   // Guarantee 1 trainer + 1 energy
@@ -2379,6 +2489,7 @@ function draw(state) { if (state.hand.length < 4 && state.deck.length) state.han
 let G = {};
 
 function pgInit() {
+  STADIUM_BATTLE_ACTIVE = null;
   // Player deck: use active player slot, fallback to default
   const p1slot = SAVED_PLAYER_DECKS[ACTIVE_PLAYER_SLOT];
   const p1cards = p1slot
@@ -2440,7 +2551,7 @@ function gLog(cls, msg) {
   const col = _etColors[cls] || 'rgba(255,255,255,.8)';
   const icon = _etIcons[cls] || '';
   el.style.borderColor = col;
-  el.innerHTML = `<span class="et-icon">${icon}</span><span class="et-msg" style="color:${col}">${msg}</span>`;
+  el.innerHTML = `<span class="et-msg" style="color:${col}">${msg}</span>`;
   el.classList.add('show');
   clearTimeout(_etTimer);
   _etTimer = setTimeout(() => el.classList.remove('show'), 1800);
@@ -2450,7 +2561,7 @@ function gLog(cls, msg) {
 // STATS · PROFILE · STORY MODE
 // ════════════════════════════════════════════════
 var PA_STATS_KEY='paTCGStats', PA_PROFILE_KEY='paTCGProfile', PA_STORY_KEY='paTCGStory';
-function statsLoad(){try{var s=localStorage.getItem(PA_STATS_KEY);return s?JSON.parse(s):{wins:0,losses:0,cpu:{wins:0,losses:0},pvp:{wins:0,losses:0},story:{wins:0,losses:0},totalGames:0,totalTurns:0,pokeStrikes:0,towersDestroyed:0,longestStreak:0,currentStreak:0,history:[]};}catch(e){return {wins:0,losses:0,cpu:{wins:0,losses:0},pvp:{wins:0,losses:0},story:{wins:0,losses:0},totalGames:0,totalTurns:0,pokeStrikes:0,towersDestroyed:0,longestStreak:0,currentStreak:0,history:[]};}}
+function statsLoad(){try{var s=localStorage.getItem(PA_STATS_KEY);return s?JSON.parse(s):{wins:0,losses:0,cpu:{wins:0,losses:0},pvp:{wins:0,losses:0},story:{wins:0,losses:0},stadium:{wins:0,losses:0},totalGames:0,totalTurns:0,pokeStrikes:0,towersDestroyed:0,typeAdvHits:0,missCount:0,longestStreak:0,currentStreak:0,longestGame:0,fastestWin:99,history:[]};}catch(e){return {wins:0,losses:0,cpu:{wins:0,losses:0},pvp:{wins:0,losses:0},story:{wins:0,losses:0},stadium:{wins:0,losses:0},totalGames:0,totalTurns:0,pokeStrikes:0,towersDestroyed:0,typeAdvHits:0,missCount:0,longestStreak:0,currentStreak:0,longestGame:0,fastestWin:99,history:[]};}}
 function statsSave(s){try{localStorage.setItem(PA_STATS_KEY,JSON.stringify(s));}catch(e){}}
 function profileLoad(){try{var p=localStorage.getItem(PA_PROFILE_KEY);return p?JSON.parse(p):{name:'Trainer Red',avatar:'🏆',title:'Rookie'};}catch(e){return {name:'Trainer Red',avatar:'🏆',title:'Rookie'};}}
 function profileSave(p){try{localStorage.setItem(PA_PROFILE_KEY,JSON.stringify(p));}catch(e){}}
@@ -2472,15 +2583,27 @@ var PA_TITLES=[
 function getTitle(s){var t='Rookie';PA_TITLES.forEach(function(T){if(T.req(s))t=T.t;});return t;}
 function recordGame(mode,won,stats){
   var s=statsLoad();
-  s.totalGames++;s.totalTurns+=(stats&&stats.turns)||0;
+  var turns=(stats&&stats.turns)||0;
+  s.totalGames++;
+  s.totalTurns+=turns;
   s.pokeStrikes+=(stats&&stats.pokeStrikes)||0;
   s.towersDestroyed+=(stats&&stats.towers)||0;
+  s.typeAdvHits+=(stats&&stats.typeAdvHits)||0;
+  s.missCount+=(stats&&stats.misses)||0;
+  if(!s.longestGame||turns>s.longestGame)s.longestGame=turns;
+  if(won&&turns>0&&(!s.fastestWin||turns<s.fastestWin))s.fastestWin=turns;
   if(won){s.wins++;s.currentStreak++;if(s.currentStreak>s.longestStreak)s.longestStreak=s.currentStreak;}
   else{s.losses++;s.currentStreak=0;}
   if(!s[mode])s[mode]={wins:0,losses:0};
   if(won)s[mode].wins++;else s[mode].losses++;
+  // Stadium: also track venue
+  if(mode==='stadium'&&stats&&stats.venue){
+    if(!s.stadiumVenues)s.stadiumVenues={};
+    if(!s.stadiumVenues[stats.venue])s.stadiumVenues[stats.venue]={wins:0,losses:0};
+    if(won)s.stadiumVenues[stats.venue].wins++;else s.stadiumVenues[stats.venue].losses++;
+  }
   var dn=(ACTIVE_PLAYER_SLOT>=0&&SAVED_PLAYER_DECKS[ACTIVE_PLAYER_SLOT])?SAVED_PLAYER_DECKS[ACTIVE_PLAYER_SLOT].name:'Default';
-  s.history.unshift({mode:mode,won:won,deck:dn,turns:(stats&&stats.turns)||0,date:new Date().toLocaleDateString(),opponent:(stats&&stats.opponent)||'CPU'});
+  s.history.unshift({mode:mode,won:won,deck:dn,turns:turns,date:new Date().toLocaleDateString(),opponent:(stats&&stats.opponent)||'CPU',venue:(stats&&stats.venue)||null});
   if(s.history.length>20)s.history=s.history.slice(0,20);
   statsSave(s);
   var p=profileLoad();p.title=getTitle(s);profileSave(p);
@@ -2540,14 +2663,35 @@ function renderProfile(){
   // By mode
   out+='<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px;margin-bottom:10px">';
   out+='<div style="font-family:\'Black Ops One\',cursive;font-size:.46rem;letter-spacing:3px;color:rgba(255,255,255,.35);margin-bottom:8px">🎯 BY MODE</div>';
-  out+=mRow('⚔ vs CPU',s.cpu&&s.cpu.wins||0,s.cpu&&s.cpu.losses||0);
+  out+=mRow('🎮 vs CPU',s.cpu&&s.cpu.wins||0,s.cpu&&s.cpu.losses||0);
   out+=mRow('🆚 1v1',s.pvp&&s.pvp.wins||0,s.pvp&&s.pvp.losses||0);
   out+=mRow('⚔ Story',s.story&&s.story.wins||0,s.story&&s.story.losses||0);
+  out+=mRow('🏟 Stadiums',s.stadium&&s.stadium.wins||0,s.stadium&&s.stadium.losses||0);
   out+='</div>';
+  // Stadium venue breakdown
+  if(s.stadiumVenues&&Object.keys(s.stadiumVenues).length){
+    out+='<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px;margin-bottom:10px">';
+    out+='<div style="font-family:\'Black Ops One\',cursive;font-size:.46rem;letter-spacing:3px;color:rgba(255,255,255,.35);margin-bottom:8px">🏟 STADIUM VENUES</div>';
+    var venueEmoji={'Cerulean Cave':'💧','Cinnabar Volcano':'🔥','Viridian Forest':'🌿','Silph Co. Tower':'🏙','Victory Road':'🥊'};
+    Object.keys(s.stadiumVenues).forEach(function(v){
+      var vd=s.stadiumVenues[v];
+      out+=mRow((venueEmoji[v]||'🏟')+' '+v,vd.wins||0,vd.losses||0);
+    });
+    out+='</div>';
+  }
   // Highlights
   out+='<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px;margin-bottom:10px">';
   out+='<div style="font-family:\'Black Ops One\',cursive;font-size:.46rem;letter-spacing:3px;color:rgba(255,255,255,.35);margin-bottom:8px">⭐ HIGHLIGHTS</div>';
-  out+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">'+stBox('🔥','STREAK',s.currentStreak,'#fde68a')+stBox('🏆','BEST',s.longestStreak,'#fde68a')+stBox('⚡','STRIKES',s.pokeStrikes,'#c4b5fd')+stBox('⚔','STORY',done+'/9','#86efac')+'</div></div>';
+  out+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">';
+  out+=stBox('🔥','STREAK',s.currentStreak,'#fde68a');
+  out+=stBox('🏆','BEST',s.longestStreak,'#fde68a');
+  out+=stBox('⚡','STRIKES',s.pokeStrikes,'#c4b5fd');
+  out+=stBox('⚔','STORY',done+'/9','#86efac');
+  out+=stBox('🗼','TOWERS',(s.towersDestroyed||0),'#fb923c');
+  out+=stBox('⏱','LONGEST',(s.longestGame||0)+'t','#93c5fd');
+  out+=stBox('🚀','FASTEST',(s.fastestWin&&s.fastestWin<99?s.fastestWin+'t':'—'),'#86efac');
+  out+=stBox('💨','MISSES',(s.missCount||0),'#94a3b8');
+  out+='</div></div>';
   // History
   if(s.history.length){
     out+='<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px;margin-bottom:10px">';
@@ -2557,7 +2701,8 @@ function renderProfile(){
       out+='<div style="width:26px;height:26px;border-radius:5px;display:flex;align-items:center;justify-content:center;background:'+(g.won?'rgba(61,186,106,.2)':'rgba(232,68,68,.2)')+'">';
       out+='<span style="font-size:.7rem">'+(g.won?'✓':'✗')+'</span></div>';
       out+='<div style="flex:1">';
-      out+='<div style="font-family:\'Black Ops One\',cursive;font-size:.55rem;color:'+(g.won?'#86efac':'#f87171')+'">'+(g.won?'WIN':'LOSS')+' · '+(g.mode==='cpu'?'vs CPU':g.mode==='pvp'?'1v1':'Story')+' · '+(g.opponent||'CPU')+'</div>';
+      var mLabel=g.mode==='cpu'?'vs CPU':g.mode==='pvp'?'1v1':g.mode==='stadium'?'🏟 '+(g.venue||'Stadium'):'Story';
+out+='<div style="font-family:\'Black Ops One\',cursive;font-size:.55rem;color:'+(g.won?'#86efac':'#f87171')+'">'+(g.won?'WIN':'LOSS')+' · '+mLabel+' · '+(g.opponent||'CPU')+'</div>';
       out+='<div style="font-size:.5rem;color:rgba(255,255,255,.35)">'+g.deck+' · '+g.turns+'t · '+g.date+'</div>';
       out+='</div></div>';
     });
@@ -2570,6 +2715,7 @@ function renderProfile(){
 
 
 var STORY_BATTLE_ACTIVE=null;
+var STADIUM_BATTLE_ACTIVE=null;
 var STORY_BATTLES=[
   {id:1,name:'Brock',gym:'Pewter City Gym',type:'Rock',description:'The Rock-solid Gym Leader. Onix and Geodude hit hard.',avatar:'🪨',difficulty:1,kingHP:10,towerHP:7,hint:'Water and Grass types are super effective!',
    deck:['w01','w01','g01','g01','g02','g02','r08','r08','r09','r09','r11','r11','t02','t02','t09','t09']},
@@ -2628,8 +2774,9 @@ function storyStartBattle(id){
   gLogClear();
   gLog('turn','STORY: '+b.gym+' — '+b.name);
   gLog('play',b.hint||'');
-  goPage('play',null);
   var sp=document.getElementById('startPopup');if(sp)sp.style.display='none';
+  goPage('play',null);
+  if(sp)sp.style.display='none';
   render();
 }
 
@@ -2646,10 +2793,167 @@ function storyOnWin(){
   STORY_BATTLE_ACTIVE=null;
 }
 function storyOnLoss(){
-  if(!STORY_BATTLE_ACTIVE)return;
+  if(!STORY_BATTLE_ACTIVE || typeof STORY_BATTLE_ACTIVE !== 'number')return;
   var b=STORY_BATTLES[STORY_BATTLE_ACTIVE-1];
   recordGame('story',false,{turns:G.turn,opponent:b?b.name:'CPU'});
   STORY_BATTLE_ACTIVE=null;
+}
+
+
+// ════════════════════════════════════════════════════
+// STADIUMS — themed battle venues
+// ════════════════════════════════════════════════════
+var STADIUMS = [
+  {
+    id:'cerulean',name:'Cerulean Cave',emoji:'💧',
+    description:'Deep underwater battles. Water and Ice types flourish here.',
+    bgColor:'linear-gradient(135deg,#0a1a2e,#0d2a4a)',
+    accentColor:'#3b82f6',
+    trainers:[
+      {name:'Marina',avatar:'🏊',desc:'Water specialist with hard-hitting Gyarados.',kingHP:10,towerHP:7,
+       deck:['w03','w03','w25','w25','w06','w06','w26','w26','w16','w16','t07','t07','t02','t02','en02','en02']},
+      {name:'Captain Surge',avatar:'⚓',desc:'Naval commander. Mixes Water and Electric.',kingHP:11,towerHP:8,
+       deck:['w25','w25','e09','e09','w03','w03','e07','e07','w26','w26','t09','t09','t16','t16','en04','en04']},
+      {name:'Lorelei',avatar:'❄',desc:'Elite Four member. Ice and Water devastation.',kingHP:13,towerHP:10,
+       deck:['i02','i02','i01','i01','w26','w26','w25','w25','p07','p07','t07','t07','t05','t05','t10','t10']},
+    ]
+  },
+  {
+    id:'volcano',name:'Cinnabar Volcano',emoji:'🔥',
+    description:'Erupting volcano arena. Fire types gain home advantage.',
+    bgColor:'linear-gradient(135deg,#2e0a00,#4a1000)',
+    accentColor:'#ef4444',
+    trainers:[
+      {name:'Kindle',avatar:'🕯',desc:'Fire starter trainer with Growlithe pack.',kingHP:10,towerHP:7,
+       deck:['f01','f01','f06','f06','f02','f02','f07','f07','f09','f09','t06','t06','t02','t02','en01','en01']},
+      {name:'Inferno Jack',avatar:'🌋',desc:'Aggressive Fire attacker. High-damage Charizard.',kingHP:12,towerHP:8,
+       deck:['f03','f03','f10','f10','f12','f12','f07','f07','f09','f09','t06','t06','t18','t18','en01','en01']},
+      {name:'Blaine (Elite)',avatar:'🔬',desc:'The master returns — rebuilt Fire deck.',kingHP:14,towerHP:10,
+       deck:['f03','f03','f12','f12','f10','f10','f07','f07','f11','f11','t06','t06','t10','t10','t14','t14']},
+    ]
+  },
+  {
+    id:'viridian',name:'Viridian Forest',emoji:'🌿',
+    description:'Ancient forest. Grass and Poison types rule the canopy.',
+    bgColor:'linear-gradient(135deg,#0a1f0a,#0f2e0f)',
+    accentColor:'#22c55e',
+    trainers:[
+      {name:'Forester',avatar:'🌲',desc:'Forest keeper with Grass swarm tactics.',kingHP:10,towerHP:7,
+       deck:['g01','g01','g04','g04','g07','g07','g09','g09','g14','g14','t03','t03','t08','t08','en03','en03']},
+      {name:'Ivy',avatar:'🍃',desc:'Grass and Poison combo. Venomous vine attacks.',kingHP:11,towerHP:8,
+       deck:['g03','g03','po01','po01','g06','g06','po08','po08','g13','g13','t07','t07','t15','t15','en03','en03']},
+      {name:'Agatha (Shadow)',avatar:'👵',desc:'Elite Four. Ghost and Poison terror.',kingHP:13,towerHP:10,
+       deck:['gh03','gh03','gh02','gh02','po08','po08','po07','po07','g03','g03','t15','t15','t10','t10','t12','t12']},
+    ]
+  },
+  {
+    id:'silph',name:'Silph Co. Tower',emoji:'🏙',
+    description:'High-tech urban arena. Psychic and Electric types surge here.',
+    bgColor:'linear-gradient(135deg,#0a0a2e,#1a1a4a)',
+    accentColor:'#a855f7',
+    trainers:[
+      {name:'Tech Trainer',avatar:'💻',desc:'Silph scientist with Electric support units.',kingHP:10,towerHP:7,
+       deck:['e01','e01','e05','e05','e07','e07','p09','p09','e04','e04','t09','t09','t16','t16','en04','en04']},
+      {name:'Sabrina (Guard)',avatar:'🔮',desc:'Sabrina personal guard. Full Psychic assault.',kingHP:12,towerHP:8,
+       deck:['p03','p03','p07','p07','p05','p05','p02','p02','p06','p06','t12','t12','t14','t14','en05','en05']},
+      {name:'Giovanni (Silph)',avatar:'💼',desc:'Team Rocket boss. Ground and Normal power.',kingHP:14,towerHP:10,
+       deck:['r12','r12','r07','r07','fi05','fi05','n21','n21','p07','p07','t10','t10','t08','t08','t14','t14']},
+    ]
+  },
+  {
+    id:'fighting',name:'Victory Road',emoji:'🥊',
+    description:'The final road to the Pokémon League. Fighting types battle for glory.',
+    bgColor:'linear-gradient(135deg,#2e1a0a,#3a2010)',
+    accentColor:'#f97316',
+    trainers:[
+      {name:'Bruno Jr.',avatar:'💪',desc:'Fighting specialist. Raw power approach.',kingHP:10,towerHP:7,
+       deck:['fi03','fi03','fi04','fi04','fi06','fi06','r08','r08','r11','r11','t08','t08','t09','t09','en06','en06']},
+      {name:'Surge (Road)',avatar:'⚡',desc:'Mixed Electric and Fighting powerhouse.',kingHP:12,towerHP:8,
+       deck:['fi05','fi05','e09','e09','fi07','fi07','e07','e07','r12','r12','t08','t08','t06','t06','en06','en06']},
+      {name:'Bruno (Elite)',avatar:'🏆',desc:'Elite Four Bruno at full power.',kingHP:14,towerHP:10,
+       deck:['fi05','fi05','fi06','fi06','fi07','fi07','r07','r07','r12','r12','t10','t10','t08','t08','t14','t14']},
+    ]
+  },
+];
+
+function renderStadiums() {
+  var el = document.getElementById('stadiumsContent'); if (!el) return;
+  var out = '<div style="padding:12px;display:flex;flex-direction:column;gap:10px">';
+
+  STADIUMS.forEach(function(s, si) {
+    out += '<div style="border-radius:14px;overflow:hidden;border:1.5px solid ' + s.accentColor + '40">';
+    // Stadium header
+    out += '<div style="background:' + s.bgColor + ';padding:14px 16px 10px">';
+    out += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">';
+    out += '<div style="font-size:1.8rem">' + s.emoji + '</div>';
+    out += '<div><div style="font-family:Black Ops One,cursive;font-size:.82rem;color:#fff;letter-spacing:1px">' + s.name + '</div>';
+    out += '<div style="font-size:.55rem;color:rgba(255,255,255,.45);margin-top:2px">' + s.description + '</div></div></div>';
+    // Trainer list
+    out += '<div style="display:flex;flex-direction:column;gap:6px">';
+    s.trainers.forEach(function(t, ti) {
+      var stars = ti === 0 ? '⭐' : ti === 1 ? '⭐⭐' : '⭐⭐⭐';
+      var isHard = ti === 2;
+      out += '<div style="display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.35);border-radius:10px;padding:8px 12px">';
+      out += '<div style="font-size:1.4rem;flex-shrink:0">' + t.avatar + '</div>';
+      out += '<div style="flex:1;min-width:0">';
+      out += '<div style="font-family:Black Ops One,cursive;font-size:.65rem;color:' + (isHard ? s.accentColor : '#fff') + '">' + t.name + '</div>';
+      out += '<div style="font-size:.5rem;color:rgba(255,255,255,.4);margin-top:1px">' + t.desc + '</div>';
+      out += '<div style="font-size:.48rem;color:rgba(255,255,255,.3);margin-top:2px">' + stars + ' · Gym Leader: ' + t.kingHP + 'HP</div>';
+      out += '</div>';
+      out += '<button onclick="stadiumStartBattle(' + si + ',' + ti + ')" style="flex-shrink:0;padding:8px 12px;border-radius:9px;border:none;cursor:pointer;font-family:Black Ops One,cursive;font-size:.55rem;background:' + (isHard ? s.accentColor : 'rgba(255,255,255,.1)') + ';color:' + (isHard ? '#000' : '#fff') + '">▶ Fight</button>';
+      out += '</div>';
+    });
+    out += '</div></div></div>';
+  });
+
+  out += '</div>';
+  el.innerHTML = out;
+}
+
+function stadiumStartBattle(stadiumIdx, trainerIdx) {
+  var stadium = STADIUMS[stadiumIdx];
+  if (!stadium) return;
+  var trainer = stadium.trainers[trainerIdx];
+  if (!trainer) return;
+
+  var cpuCards = [];
+  trainer.deck.forEach(function(cid) {
+    var found = CARDS.find(function(c){ return c.id === cid; });
+    if (found) cpuCards.push(found);
+  });
+  while (cpuCards.length < 16) cpuCards = cpuCards.concat(cpuCards.slice(0, Math.min(8, cpuCards.length)));
+  cpuCards = cpuCards.slice(0, 16);
+
+  var p1slot = SAVED_PLAYER_DECKS[ACTIVE_PLAYER_SLOT];
+  var p1units = p1slot ? p1slot.cards.map(function(c){ return mkUnit(c,'p1'); }) : mkDefaultPlayer();
+  var p2units = cpuCards.map(function(c){ return mkUnit(c,'p2'); });
+
+  STORY_BATTLE_ACTIVE = null;
+  STADIUM_BATTLE_ACTIVE = {stadiumIdx: stadiumIdx, trainerIdx: trainerIdx};
+
+  G = {
+    phase:'player', turn:1, selIdx:-1, selCard:null, cq:[], ci:0,
+    p1:{ elixir:2, hand:[], deck:mkDeck(p1units),
+         units:{ba:[],bb:[],fa:[],fb:[],xa:[],xb:[]},
+         tA:{w:0,max:8,fallen:false}, tB:{w:0,max:8,fallen:false},
+         king:{w:0,max:12,fallen:false}, name:'Trainer Red' },
+    p2:{ elixir:2, hand:[], deck:mkDeck(p2units),
+         units:{ba:[],bb:[],fa:[],fb:[],xa:[],xb:[]},
+         tA:{w:0,max:trainer.towerHP||8,fallen:false},
+         tB:{w:0,max:trainer.towerHP||8,fallen:false},
+         king:{w:0,max:trainer.kingHP||12,fallen:false},
+         name:trainer.name },
+    eliminated:[],
+  };
+  for (var i=0;i<4;i++) draw(G.p1);
+  for (var i=0;i<3;i++) draw(G.p2);
+  gLogClear();
+  gLog('turn', stadium.emoji + ' ' + stadium.name + ' — ' + trainer.name);
+  var sp = document.getElementById('startPopup');
+  if (sp) sp.style.display = 'none';
+  goPage('play', null);
+  if (sp) sp.style.display = 'none';
+  render();
 }
 
 function renderStory(){
@@ -2737,13 +3041,303 @@ function faintPop(u, side) {
     pop.innerHTML = '<div class="faint-pop-skull">☠</div>' +
       '<div class="faint-pop-name">' + u.name + '</div>' +
       '<div class="faint-pop-label">FAINTED</div>';
-    // Center on the token
-    pop.style.left = (rect.left + rect.width/2 - 35) + 'px';
-    pop.style.top  = (rect.top  + rect.height/2 - 10) + 'px';
+    // Centered on the token where it died
+    pop.style.left = (rect.left + rect.width/2 - 50) + 'px';
+    pop.style.top  = (rect.top  + rect.height/2 - 20) + 'px';
+    pop.style.bottom = 'auto';
     document.body.appendChild(pop);
     setTimeout(function() { if (pop.parentNode) pop.parentNode.removeChild(pop); }, 1450);
   });
 }
+
+// ══════════════════════════════════════════════════════
+// TYPE EFFECTIVENESS
+// 2 = super effective, 0.5 = not very effective, 0 = immune, 1 = normal
+// ══════════════════════════════════════════════════════
+const TYPE_CHART = {
+  fire:     { grass:2, ice:2, poison:2, rock:0.5, water:0.5, fire:0.5, dragon:0.5 },
+  water:    { fire:2, rock:2, ground:2, water:0.5, grass:0.5, dragon:0.5 },
+  grass:    { water:2, rock:2, ground:2, fire:0.5, grass:0.5, poison:0.5, flying:0.5, dragon:0.5, bug:0.5 },
+  electric: { water:2, flying:2, grass:0.5, electric:0.5, dragon:0.5, ground:0 },
+  psychic:  { fighting:2, poison:2, psychic:0.5 },
+  fighting: { normal:2, rock:2, ice:2, psychic:0.5, flying:0.5, poison:0.5, ghost:0 },
+  poison:   { grass:2, water:0.5, poison:0.5, rock:0.5, ground:0.5, ghost:0.5 },
+  rock:     { fire:2, ice:2, flying:2, bug:2, fighting:0.5, ground:0.5 },
+  ice:      { grass:2, ground:2, flying:2, dragon:2, water:0.5, ice:0.5, fire:0.5 },
+  dragon:   { dragon:2, ice:0.5, fire:0.5, water:0.5, electric:0.5 },
+  ghost:    { ghost:2, psychic:2, normal:0, fighting:0 },
+  normal:   { rock:0.5, ghost:0 },
+  ground:   { fire:2, electric:2, poison:2, rock:2, flying:0, grass:0.5, bug:0.5 },
+};
+
+function getTypeMultiplier(atkType, defType) {
+  if (!atkType || !defType) return 1;
+  const row = TYPE_CHART[atkType];
+  if (!row) return 1;
+  return row[defType] !== undefined ? row[defType] : 1;
+}
+
+function typeEffText(mult) {
+  if (mult >= 2)   return 'SUPER EFFECTIVE!';
+  if (mult === 0)  return 'NO EFFECT';
+  if (mult < 1)    return 'Not very effective...';
+  return '';
+}
+
+
+// ════════════════════════════════════════════════════
+// TUTORIAL SYSTEM
+// ════════════════════════════════════════════════════
+var TUT_ACTIVE = false;
+var TUT_STEP = 0;
+var TUT_WAITING = false; // waiting for player to do the action
+
+var TUT_STEPS = [
+  {
+    title: 'Welcome to Pokémon Arena TCG!',
+    body: 'This tutorial will walk you through your first battle step by step. The CPU opponent has been weakened so you can learn without pressure.',
+    tip: 'Tap NEXT whenever you\'re ready to continue.',
+    target: null,
+    action: 'next', // just tap next to continue
+    position: 'center',
+  },
+  {
+    title: 'Your Hand',
+    body: 'These are your cards at the bottom of the screen. Each card has a ⚡ Energy cost shown in the top-right corner. You start with 2⚡ and gain 1⚡ each turn.',
+    tip: 'Cards glow green when you can afford them. Grey means not enough energy.',
+    target: 'playHand',
+    action: 'next',
+    position: 'above',
+  },
+  {
+    title: 'Deploy a Pokémon',
+    body: 'Tap any card in your hand to select it. Glowing ＋ slots will appear on your side of the board. Tap a slot to deploy your Pokémon there.',
+    tip: 'Start by deploying to your BACK ROW — it\'s the safest position!',
+    target: 'playHand',
+    action: 'deploy', // wait for player to deploy a card
+    position: 'above',
+    btnLabel: 'Deploy a card to continue →',
+    btnDisabled: true,
+  },
+  {
+    title: 'Nice! Your Pokémon is on the board.',
+    body: 'Pokémon advance forward each turn: Back Row → Front Row → Neutral Zone. The closer they get to the enemy, the more they can attack.',
+    tip: 'Pokémon in the NEUTRAL ZONE attack the enemy towers directly!',
+    target: 'playBoard',
+    action: 'next',
+    position: 'center',
+  },
+  {
+    title: 'The Board Layout',
+    body: 'There are TWO lanes (A and B). Each side has:\n• Back Row — safe spawning zone\n• Front Row — mid-range attackers\n• Neutral Zone — front line, attacks towers',
+    tip: 'Try to have Pokémon in both lanes to put pressure on both towers!',
+    target: 'playBoard',
+    action: 'next',
+    position: 'center',
+  },
+  {
+    title: 'Trainer Towers',
+    body: 'The enemy has two Trainer Towers (one per lane) and a Gym Leader. Destroy both Towers first — then the Gym Leader becomes vulnerable!',
+    tip: 'Your Trainer Towers also fire back at the enemy each round. Protect them!',
+    target: 'playBoard',
+    action: 'next',
+    position: 'center',
+  },
+  {
+    title: 'Energy Cards & Spells',
+    body: 'Trainer cards (🎒) and Energy cards (⚡) have special effects when played. Tap one in your hand to see what it does, then tap a zone to cast it.',
+    tip: 'Water Energy heals 2w from an ally. Fire Energy gives +2w next attack!',
+    target: 'playHand',
+    action: 'next',
+    position: 'above',
+  },
+  {
+    title: 'End Your Turn',
+    body: 'When you\'re done deploying, tap END TURN (the big card at the right of your hand). Combat will happen automatically — both sides roll D20!',
+    tip: 'D20 roll results: 1 = Miss, 2-8 = 1w, 9-16 = 2w, 17-19 = 3w, 20 = POKÉ STRIKE!',
+    target: 'playHand',
+    action: 'endturn', // wait for player to end turn
+    position: 'above',
+    btnLabel: 'Tap END TURN to continue →',
+    btnDisabled: true,
+  },
+  {
+    title: 'Roll the D20!',
+    body: 'Tap the deck card that appears during COMBAT phase to roll for each Pokémon. A natural 20 triggers a POKÉ STRIKE — your Pokémon\'s special move!',
+    tip: 'Type effectiveness matters! Fire beats Grass, Water beats Fire, etc.',
+    target: 'playHand',
+    action: 'roll', // wait for at least one roll
+    position: 'above',
+    btnLabel: 'Tap deck card to roll →',
+    btnDisabled: true,
+  },
+  {
+    title: 'You\'re ready to battle!',
+    body: 'Keep deploying Pokémon, using spells, and rolling to attack. Destroy the enemy Gym Leader to WIN. Good luck, Trainer!',
+    tip: 'Check the Stadiums tab for themed battles, or jump into Story Mode for the Kanto Gym Challenge!',
+    target: null,
+    action: 'finish',
+    position: 'center',
+    btnLabel: '⚔ START BATTLING!',
+  },
+];
+
+function startTutorial() {
+  // Init a special tutorial game with weakened CPU
+  var tutPlayerCards = ['f01','w01','g01','e01','p01','fi01','t02','en01'].map(function(id) {
+    var c = CARDS.find(function(x){ return x.id === id; });
+    return c ? mkUnit(c,'p1') : null;
+  }).filter(Boolean);
+  // Fill to 8 with defaults
+  while (tutPlayerCards.length < 8) {
+    var c = CARDS.find(function(x){ return x.gtype === 'Physical' && x.rarity === 'common'; });
+    if (c) tutPlayerCards.push(mkUnit(c,'p1')); else break;
+  }
+  var tutCPUCards = ['n04','n04','r05','r05','g09','g09','t02','t02'].map(function(id) {
+    var c = CARDS.find(function(x){ return x.id === id; });
+    return c ? mkUnit(c,'p2') : null;
+  }).filter(Boolean);
+  while (tutCPUCards.length < 8) tutCPUCards.push(tutCPUCards[0]);
+
+  G = {
+    phase:'player', turn:1, selIdx:-1, selCard:null, cq:[], ci:0,
+    p1:{ elixir:4, hand:[], deck:mkDeck(tutPlayerCards),
+         units:{ba:[],bb:[],fa:[],fb:[],xa:[],xb:[]},
+         tA:{w:0,max:8,fallen:false}, tB:{w:0,max:8,fallen:false},
+         king:{w:0,max:12,fallen:false}, name:'Trainer Red' },
+    p2:{ elixir:2, hand:[], deck:mkDeck(tutCPUCards),
+         units:{ba:[],bb:[],fa:[],fb:[],xa:[],xb:[]},
+         tA:{w:0,max:4,fallen:false}, tB:{w:0,max:4,fallen:false},
+         king:{w:0,max:6,fallen:false}, name:'Tutorial CPU' },
+    eliminated:[],
+  };
+  for (var i=0;i<4;i++) draw(G.p1);
+  for (var i=0;i<3;i++) draw(G.p2);
+  gLogClear();
+  TUT_ACTIVE = true;
+  TUT_STEP = 0;
+  TUT_WAITING = false;
+  STORY_BATTLE_ACTIVE = null;
+
+  goPage('play', null);
+  var sp = document.getElementById('startPopup');
+  if (sp) sp.style.display = 'none';
+  render();
+
+  // Short delay so board renders before overlay appears
+  setTimeout(tutShow, 200);
+}
+
+function tutShow() {
+  if (!TUT_ACTIVE) return;
+  var step = TUT_STEPS[TUT_STEP];
+  if (!step) { tutExit(); return; }
+
+  var overlay = document.getElementById('tutOverlay');
+  var tip = document.getElementById('tutTip');
+  var backdrop = document.getElementById('tutBackdrop');
+  var highlight = document.getElementById('tutHighlight');
+
+  overlay.classList.add('active');
+  backdrop.style.display = 'block';
+  tip.style.display = 'block';
+
+  // Progress dots
+  var prog = document.getElementById('tutProgress');
+  prog.innerHTML = TUT_STEPS.map(function(_,i) {
+    return '<div class="tut-dot ' + (i < TUT_STEP ? 'done' : i === TUT_STEP ? 'active' : '') + '"></div>';
+  }).join('');
+
+  document.getElementById('tutStepNum').textContent = 'STEP ' + (TUT_STEP+1) + ' / ' + TUT_STEPS.length;
+  document.getElementById('tutTitle').textContent = step.title;
+  document.getElementById('tutBody').textContent = step.body;
+
+  var tipBox = document.getElementById('tutTipBox');
+  if (step.tip) { tipBox.style.display='block'; tipBox.textContent = '💡 ' + step.tip; }
+  else tipBox.style.display = 'none';
+
+  var nextBtn = document.getElementById('tutNext');
+  nextBtn.textContent = step.btnLabel || 'NEXT →';
+  nextBtn.disabled = !!step.btnDisabled;
+
+  // Highlight target element
+  if (step.target) {
+    var el = document.getElementById(step.target);
+    if (el) {
+      var r = el.getBoundingClientRect();
+      highlight.style.display = 'block';
+      highlight.style.left   = (r.left - 6) + 'px';
+      highlight.style.top    = (r.top  - 6) + 'px';
+      highlight.style.width  = (r.width  + 12) + 'px';
+      highlight.style.height = (r.height + 12) + 'px';
+    }
+  } else {
+    highlight.style.display = 'none';
+  }
+
+  // Position tip card
+  tutPositionTip(step);
+}
+
+function tutPositionTip(step) {
+  var tip = document.getElementById('tutTip');
+  var pos = step.position || 'center';
+  if (pos === 'center') {
+    tip.style.left = '50%';
+    tip.style.top  = '50%';
+    tip.style.transform = 'translate(-50%,-50%)';
+    tip.style.bottom = 'auto';
+  } else if (pos === 'above' && step.target) {
+    var el = document.getElementById(step.target);
+    if (el) {
+      var r = el.getBoundingClientRect();
+      tip.style.left = '50%';
+      tip.style.bottom = (window.innerHeight - r.top + 14) + 'px';
+      tip.style.top = 'auto';
+      tip.style.transform = 'translateX(-50%)';
+    }
+  }
+}
+
+function tutNext() {
+  var step = TUT_STEPS[TUT_STEP];
+  if (!step) return;
+  if (step.action === 'finish') { tutExit(); return; }
+  TUT_STEP++;
+  if (TUT_STEP >= TUT_STEPS.length) { tutExit(); return; }
+  tutShow();
+}
+
+function tutExit() {
+  TUT_ACTIVE = false;
+  var overlay = document.getElementById('tutOverlay');
+  var tip = document.getElementById('tutTip');
+  var highlight = document.getElementById('tutHighlight');
+  var backdrop = document.getElementById('tutBackdrop');
+  overlay.classList.remove('active');
+  tip.style.display = 'none';
+  highlight.style.display = 'none';
+  backdrop.style.display = 'none';
+}
+
+// Hook into game events to auto-advance tutorial
+function tutCheckEvent(event) {
+  if (!TUT_ACTIVE) return;
+  var step = TUT_STEPS[TUT_STEP];
+  if (!step) return;
+  if (step.action === event) {
+    // Unlock the next button
+    var btn = document.getElementById('tutNext');
+    if (btn) { btn.disabled = false; btn.textContent = 'CONTINUE →'; }
+    // Auto advance after short delay so player sees what happened
+    setTimeout(function() {
+      TUT_STEP++;
+      if (TUT_STEP >= TUT_STEPS.length) tutExit();
+      else tutShow();
+    }, 900);
+  }
+}
+
 function gLogClear() { const el = document.getElementById('eventToast'); if(el) el.classList.remove('show'); }
 
 // ── D20 toast ─────────────────────────────────────
@@ -2754,7 +3348,7 @@ function showActionToast(msg, color) {
   if (!el) {
     el = document.createElement('div');
     el.id = 'actionToast';
-    el.style.cssText = 'position:fixed;top:52px;left:10px;right:auto;transform:none;z-index:700;padding:6px 12px;border-radius:8px;font-family:Black Ops One,cursive;font-size:.62rem;letter-spacing:1px;background:rgba(6,8,15,.95);border:1.5px solid;pointer-events:none;transition:opacity .3s;white-space:nowrap;max-width:55vw;text-align:left';
+    el.style.cssText = 'position:fixed;top:44px;left:8px;right:auto;transform:none;z-index:700;padding:5px 11px;border-radius:8px;font-family:Black Ops One,cursive;font-size:.58rem;letter-spacing:1px;background:rgba(6,8,15,.95);border:1.5px solid;pointer-events:none;transition:opacity .3s;white-space:nowrap;max-width:50vw;text-align:left';
     document.body.appendChild(el);
   }
   el.textContent = msg;
@@ -2764,15 +3358,18 @@ function showActionToast(msg, color) {
   clearTimeout(_actionToastTimer);
   _actionToastTimer = setTimeout(() => { el.style.opacity = '0'; }, 1800);
 }
-function showD20(who, roll, w, cs) {
+function showD20(who, roll, w, cs, typeMsg) {
   const el = document.getElementById('d20Toast'); if (!el) return;
   const col = cs ? 'var(--gold)' : w === 0 ? 'var(--soft)' : w === 1 ? '#f5c090' : w === 2 ? '#80d4a0' : '#f09090';
   const res = cs ? '⚡ POKÉ STRIKE!' : w === 0 ? 'MISS' : w === 1 ? 'WEAK HIT' : w === 2 ? 'HIT' : 'CRITICAL';
   el.style.borderColor = col;
+  const typeColor = typeMsg === 'SUPER EFFECTIVE!' ? '#f59e0b' : typeMsg === 'NO EFFECT' ? '#666' : '#94a3b8';
+  const typeHtml = typeMsg ? `<div class="d20-type" style="color:${typeColor}">${typeMsg}</div>` : '';
   el.innerHTML = `<div class="d20-who">${who}</div>
     <div class="d20-num" style="color:${col};text-shadow:0 0 16px ${col}">${roll}</div>
     <div class="d20-res" style="color:${col}">${res}</div>
-    <div class="d20-wnd">${cs ? '3w + Poké Strike!' : w === 0 ? 'No wounds' : w + 'w'}</div>`;
+    <div class="d20-wnd">${cs ? '3w + Poké Strike!' : w === 0 ? 'No wounds' : w + 'w'}</div>
+    ${typeHtml}`;
   el.classList.add('show');
   clearTimeout(_toastTimer); _toastTimer = setTimeout(() => el.classList.remove('show'), 1700);
 }
@@ -3070,6 +3667,7 @@ function pgDep(row, lane) {
   draw(G.p1);
   gLog('play', `⚡ You deploy ${card.name} → Lane ${lane.toUpperCase()}${row === 'x' ? ' (Neutral)' : ''}`);
   onDeploy(u, 'p1', lane);
+  tutCheckEvent('deploy');
   pgClearSel(); checkKills(); render(); checkWin();
 }
 function pgSpell(lane) {
@@ -3372,6 +3970,7 @@ function onDeploy(u, side, lane) {
 // ── End player turn ───────────────────────────────
 function pgEndTurn() {
   if (G.phase !== 'player') return;
+  tutCheckEvent('endturn');
   gLog('turn', `--- End Turn ${G.turn} · Advancing ---`);
   advance('p1'); advance('p2');
   G.p1.elixir = Math.min(10, G.p1.elixir + 1);
@@ -3386,9 +3985,9 @@ function advance(side) {
   const u = G[side].units;
   ['a','b'].forEach(ln => {
     const bk = u['b'+ln], fr = u['f'+ln], nx = u['x'+ln];
-    const frontMove = fr.find(x => x.gtype !== 'Stadium' && !x._block);
+    const frontMove = fr.find(x => x.gtype !== 'Defender' && !x._block);
     if (frontMove && nx.length < 3) { fr.splice(fr.indexOf(frontMove), 1); nx.push(frontMove); gLog('atk', `${side === 'p1' ? 'Your' : 'CPU'} ${frontMove.name} → Battle Zone!`); }
-    const backMove = bk.find(x => x.gtype !== 'Stadium' && !x._block);
+    const backMove = bk.find(x => x.gtype !== 'Defender' && !x._block);
     if (backMove && fr.length < 3) { bk.splice(bk.indexOf(backMove), 1); fr.push(backMove); gLog('atk', `${side === 'p1' ? 'Your' : 'CPU'} ${backMove.name} → Front!`); }
   });
 }
@@ -3410,6 +4009,7 @@ function buildCQ() {
 // ── Combat roll ───────────────────────────────────
 function pgRoll() {
   if (G.phase !== 'combat') return;
+  tutCheckEvent('roll');
   // Skip dead items
   while (G.ci < G.cq.length) {
     const item = G.cq[G.ci];
@@ -3438,17 +4038,8 @@ function pgRoll() {
     } else { // neutral
       targets = allUnits(en, lane); canTower = targets.length === 0;
     }
-  } else if (u.gtype === 'Stadium') {
+  } else if (u.gtype === 'Defender') {
     targets = (G[en].units['x'+lane]||[]).concat(G[en].units['f'+lane]||[]); canTower = false;
-  } else if (u.gtype === 'Flying') {
-    // Flying can attack from any row (flies over obstacles)
-    if (row === 'b') {
-      targets = [...(G[en].units['x'+lane]||[])]; canTower = false;
-    } else if (row === 'f') {
-      targets = [...(G[en].units['x'+lane]||[])]; canTower = targets.length === 0;
-    } else { // neutral
-      targets = allUnits(en, lane); canTower = targets.length === 0;
-    }
   } else {
     // Physical and all others
     if (row === 'x') {
@@ -3465,8 +4056,17 @@ function pgRoll() {
   let wd = cs ? 3 : w;
   if (u._xatk > 0) { wd += u._xatk; u._xatk = 0; }
   const who = (side === 'p1' ? 'Your ' : 'CPU ') + u.name;
-  showD20(who, roll, w, cs);
-  gLog(cs ? 'cs' : w === 0 ? 'atk' : 'dmg', `${who} D20:${roll}${cs ? ' ⚡ POKÉ STRIKE!' : w === 0 ? ' MISS' : ' = ' + wd + 'w'}`);
+  // Type effectiveness
+  let typeMult = 1, typeEffMsg = '';
+  if (targets.length && w > 0) {
+    typeMult = getTypeMultiplier(u.ptype, targets[0].ptype);
+    if (typeMult !== 1) {
+      wd = typeMult >= 2 ? Math.ceil(wd * 2) : typeMult === 0 ? 0 : Math.max(1, Math.floor(wd * 0.5));
+      typeEffMsg = typeEffText(typeMult);
+    }
+  }
+  showD20(who, roll, w, cs, typeEffMsg);
+  gLog(cs ? 'cs' : w === 0 ? 'atk' : 'dmg', `${who} D20:${roll}${cs ? ' ⚡ POKÉ STRIKE!' : w === 0 ? ' MISS' : ' = ' + wd + 'w'}${typeEffMsg ? ' · ' + typeEffMsg : ''}`);
   if (targets.length) {
     const t = targets[0];
     if (t._barrier > 0) { t._barrier--; wd = 0; gLog('atk', 'Barrier blocked!'); }
@@ -3539,7 +4139,7 @@ function doCS(u, side, lane, en) {
   } else if (nm === 'GOLEM' || nm === 'RHYDON') {
     if (eu.length) { eu[0].w += 3; push(eu[0]); gLog('cs', nm + ': +3w + push back!'); }
   } else if (nm === 'ARCANINE') {
-    if (eu.length) eu[0].w += 3; ['b','f'].forEach(z => { const mv = G[side].units[z+lane].filter(x => x.gtype !== 'Stadium'); mv.forEach(x => { G[side].units[z+lane].splice(G[side].units[z+lane].indexOf(x),1); (z==='b'?G[side].units['f'+lane]:G[side].units['x'+lane]).push(x); }); }); gLog('cs','ARCANINE: +3w + allies advance!');
+    if (eu.length) eu[0].w += 3; ['b','f'].forEach(z => { const mv = G[side].units[z+lane].filter(x => x.gtype !== 'Defender'); mv.forEach(x => { G[side].units[z+lane].splice(G[side].units[z+lane].indexOf(x),1); (z==='b'?G[side].units['f'+lane]:G[side].units['x'+lane]).push(x); }); }); gLog('cs','ARCANINE: +3w + allies advance!');
   } else if (nm === 'AERODACTYL') {
     if (eu.length) eu[0].w += 3; eu.forEach(e => e.wounds = Math.max(1, e.wounds - 1)); gLog('cs','AERODACTYL: +3w + Screech -1 threshold!');
   } else if (nm === 'PIDGEOT') {
@@ -3624,8 +4224,8 @@ function doTowers() {
     if (!enAny) return; // their trainer still standing — not active
     const kg = G[en].king;
     if (kg.fallen) return;
-    // Prefer neutral/front in either lane, fall back to back
-    const tgts = ['xa','fa','xb','fb','ba','bb'].flatMap(z => G[atSide].units[z]||[]);
+    // Gym Leader hits neutral + front in both lanes (NOT back row)
+    const tgts = ['xa','fa','xb','fb'].flatMap(z => G[atSide].units[z]||[]);
     if (!tgts.length) return;
     tgts[0].w += 2;
     dmgPop(tgts[0]._uid, 2, 'dmg');
@@ -3714,12 +4314,20 @@ function checkWin() {
   if (G.p2.king.w >= G.p2.king.max) {
     G.p2.king.fallen = true; G.phase = 'win';
     gLog('win', `🏆 VICTORY! ${G.p1.name} wins!`);
-    if (STORY_BATTLE_ACTIVE) storyOnWin();
+    if (STORY_BATTLE_ACTIVE && typeof STORY_BATTLE_ACTIVE === 'number') storyOnWin();
+    if (STADIUM_BATTLE_ACTIVE) {
+      var _sv = STADIUMS[STADIUM_BATTLE_ACTIVE.stadiumIdx];
+      recordGame('stadium', true, {turns:G.turn, towers:(G.p2.tA.fallen?1:0)+(G.p2.tB.fallen?1:0), opponent:G.p2.name, venue:_sv?_sv.name:''});
+      STADIUM_BATTLE_ACTIVE = null; }
     showEnd(true);
   } else if (G.p1.king.w >= G.p1.king.max) {
     G.p1.king.fallen = true; G.phase = 'lose';
     gLog('die', `DEFEAT. ${G.p2.name} wins.`);
-    if (STORY_BATTLE_ACTIVE) storyOnLoss();
+    if (STORY_BATTLE_ACTIVE && typeof STORY_BATTLE_ACTIVE === 'number') storyOnLoss();
+    if (STADIUM_BATTLE_ACTIVE) {
+      var _sv2 = STADIUMS[STADIUM_BATTLE_ACTIVE.stadiumIdx];
+      recordGame('stadium', false, {turns:G.turn, opponent:G.p2.name, venue:_sv2?_sv2.name:''});
+      STADIUM_BATTLE_ACTIVE = null; }
     showEnd(false);
   }
 }
@@ -3728,7 +4336,7 @@ function showEnd(win) {
   document.getElementById('endTitle').textContent = win ? '🏆 VICTORY!' : '💀 DEFEATED';
   document.getElementById('endTitle').style.color = win ? 'var(--gold)' : 'var(--red)';
   // Story-specific subtitle
-  if (STORY_BATTLE_ACTIVE) {
+  if (STORY_BATTLE_ACTIVE && typeof STORY_BATTLE_ACTIVE === 'number') {
     const b = STORY_BATTLES[STORY_BATTLE_ACTIVE - 1];
     document.getElementById('endSub').textContent = win
       ? (b && b.isBoss ? '🏆 YOU ARE THE KANTO CHAMPION!' : '✅ GYM BADGE EARNED! ' + (b ? b.gym : ''))
@@ -4077,9 +4685,9 @@ function pvpAdvance(side) {
   const u = PVP[side].units;
   ['a','b'].forEach(ln => {
     const bk=u['b'+ln], fr=u['f'+ln], nx=u['x'+ln];
-    const fm = fr.find(x=>x.gtype!=='Stadium'&&!x._block);
+    const fm = fr.find(x=>x.gtype!=='Defender'&&!x._block);
     if (fm && nx.length<3) { fr.splice(fr.indexOf(fm),1); nx.push(fm); }
-    const bm = bk.find(x=>x.gtype!=='Stadium'&&!x._block);
+    const bm = bk.find(x=>x.gtype!=='Defender'&&!x._block);
     if (bm && fr.length<3) { bk.splice(bk.indexOf(bm),1); fr.push(bm); }
   });
 }
@@ -4115,7 +4723,7 @@ function pvpRoll() {
   if (u._skip) { u._skip=false; pvpRender(); return; }
   let targets=[], canTower=false;
   if (u.gtype==='Special') { targets=pvpAllUnits(en,lane); canTower=(row==='x'||row==='f'); }
-  else if (u.gtype==='Stadium') { targets=(PVP[en].units['x'+lane]||[]).concat(PVP[en].units['f'+lane]||[]); }
+  else if (u.gtype==='Defender') { targets=(PVP[en].units['x'+lane]||[]).concat(PVP[en].units['f'+lane]||[]); }
   else {
     if (row==='x') { targets=pvpAllUnits(en,lane); canTower=true; }
     else if (row==='f') { targets=[...(PVP[en].units['x'+lane]||[])]; }
@@ -4330,6 +4938,23 @@ window.addEventListener('DOMContentLoaded', () => {
     <div id="spellTargetTitle" style="font-family:'Black Ops One',cursive;font-size:.75rem;color:var(--gold);letter-spacing:1px;margin-bottom:10px">Choose Target</div>
     <div id="spellTargetList" style="display:flex;flex-direction:column;gap:6px;max-height:55vh;overflow-y:auto"></div>
     <button onclick="document.getElementById('spellTargetModal').style.display='none'" style="margin-top:10px;width:100%;padding:8px;background:rgba(255,255,255,.05);border:1px solid var(--bdr);border-radius:7px;color:var(--soft);font-family:'Black Ops One',cursive;font-size:.58rem;cursor:pointer">✕ Cancel</button>
+  </div>
+</div>
+
+<!-- ═══ TUTORIAL OVERLAY ═══ -->
+<div id="tutOverlay">
+  <div id="tutBackdrop"></div>
+  <div id="tutHighlight" class="tut-highlight" style="display:none"></div>
+  <div id="tutTip" style="display:none">
+    <div class="tut-progress" id="tutProgress"></div>
+    <div class="tut-step-num" id="tutStepNum">STEP 1 / 10</div>
+    <div class="tut-title" id="tutTitle">Welcome!</div>
+    <div class="tut-body" id="tutBody">Body text</div>
+    <div class="tut-tip" id="tutTipBox" style="display:none">💡 Tip text</div>
+    <div class="tut-actions">
+      <button class="tut-btn-next" id="tutNext" onclick="tutNext()">NEXT →</button>
+      <button class="tut-btn-skip" onclick="tutExit()">✕ Exit</button>
+    </div>
   </div>
 </div>
 </body>
