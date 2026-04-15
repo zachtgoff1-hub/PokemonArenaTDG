@@ -42,7 +42,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--txt);min-h
 .nbtn.on{background:var(--gold);border-color:var(--gold);color:#000}
 
 /* ── PAGE SYSTEM ─────────────────────────────── */
-.pg{display:none}.pg.on{display:block}
+.pg{display:none}.pg.on{display:block}#pg-home.on{display:flex!important}
 .wrap{max-width:960px;margin:0 auto;padding:18px 12px 80px}
 .sec{
   background:var(--paper);border-radius:12px;padding:18px 20px;
@@ -527,11 +527,11 @@ li{margin-bottom:4px;line-height:1.5}
   .db-layout{grid-template-columns:1fr}
 }
 /* ── HOME PAGE ──────────────────────────────────── */
-#pg-home{background:var(--bg);height:100vh;overflow:hidden;display:flex;flex-direction:column}
+#pg-home{background:var(--bg);height:100vh;max-height:100vh;overflow:hidden;display:flex!important;flex-direction:column}
 .home-page{
   display:flex;flex-direction:column;align-items:center;
   padding:16px max(16px,env(safe-area-inset-right,16px)) max(16px,env(safe-area-inset-bottom,16px)) max(16px,env(safe-area-inset-left,16px));
-  height:100%;flex:1;
+  flex:1;min-height:0;height:100vh;max-height:100vh;
   box-sizing:border-box;overflow:hidden;
 }
 /* Logo */
@@ -1047,7 +1047,7 @@ body.in-game{overflow:hidden;position:fixed;width:100%;height:100%}
     </div>
 
   </div>
-  <div class="home-footer-tag" style="font-size:.42rem;margin-top:4px;flex-shrink:0">v1.4 · Fan Project · Not affiliated with Nintendo</div>
+  <div class="home-footer-tag" style="font-size:.42rem;margin-top:4px;flex-shrink:0">v2.0 · Fan Project · Not affiliated with Nintendo</div>
 
 </div>
 </div>
@@ -1192,7 +1192,7 @@ body.in-game{overflow:hidden;position:fixed;width:100%;height:100%}
     </div>
     <button onclick="launchGame()" style="padding:14px 36px;background:var(--gold);border:none;border-radius:11px;color:#000;font-family:'Black Ops One',cursive;font-size:1rem;cursor:pointer;letter-spacing:3px;box-shadow:0 0 28px rgba(255,203,5,.4)">▶ START BATTLE</button>
     <button onclick="exitGame()" style="padding:8px 22px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:9px;color:var(--soft);font-family:'Black Ops One',cursive;font-size:.62rem;cursor:pointer;letter-spacing:1px">🏠 Return Home</button>
-    <div style="font-family:'Share Tech Mono',monospace;font-size:.42rem;color:rgba(255,255,255,.18);letter-spacing:2px">v1.4 · GEN I · 151 POKÉMON</div>
+    <div style="font-family:'Share Tech Mono',monospace;font-size:.42rem;color:rgba(255,255,255,.18);letter-spacing:2px">v2.0 · GEN I · 151 POKÉMON</div>
   </div>
   <!-- FULL-SCREEN GAME SHELL (flex column, locked to viewport) -->
   <div id="gameShell">
@@ -1382,6 +1382,58 @@ body.in-game{overflow:hidden;position:fixed;width:100%;height:100%}
     <li><b>10 Energy Cards</b> — mandatory</li>
     <li><b>Requirements:</b> 1 Tank (5+w Ground) · 1 Flying · 1 Special · 1 Stadium · 1 Trainer spell</li>
   </ul>
+
+<div class="sec" style="--acc:var(--mut)">
+<h2>📋 Changelog</h2>
+
+<div style="display:flex;flex-direction:column;gap:10px">
+
+<div style="background:rgba(255,203,5,.06);border:1px solid rgba(255,203,5,.2);border-radius:10px;padding:12px 14px">
+  <div style="font-family:'Black Ops One',cursive;font-size:.65rem;color:var(--gold);letter-spacing:2px;margin-bottom:6px">v2.0 — Current</div>
+  <div style="font-size:.55rem;color:rgba(255,255,255,.7);line-height:1.7">
+    ✦ Flying type removed — merged into Physical<br>
+    ✦ Stadium type renamed to Defender<br>
+    ✦ Full type effectiveness system (super effective, not very effective, immune)<br>
+    ✦ 🏟 Stadiums tab — 5 venues × 3 trainers each<br>
+    ✦ Energy cards reworked — real effects instead of elixir gain<br>
+    ✦ Fainted popup centered on dying card<br>
+    ✦ Tower damage popups (amber = hit, teal = fired)<br>
+    ✦ Pokémon cries on deploy via PokeAPI<br>
+    ✦ Web Audio SFX — deploy, hit, heal, fainted, victory, defeat, roll<br>
+    ✦ 🔊 Sound toggle in game top bar<br>
+    ✦ Nav bar removed — 🏠 Home button on every page<br>
+    ✦ Stadium stats + venue breakdown in Profile<br>
+    ✦ New tracked stats: longest game, fastest win, miss count, towers destroyed<br>
+    ✦ Deck builder: Physical / Special / Defender / Rock / Ice / Dragon filter tabs<br>
+    ✦ Home screen fills full viewport height<br>
+    ✦ 🎓 Tutorial mode — 10 guided steps with highlight ring<br>
+    ✦ Gym Leader fixed — no longer hits back row<br>
+    ✦ Trainer towers correctly restricted to Neutral + Front only<br>
+    ✦ Battle log popup repositioned to bottom-right above hand<br>
+    ✦ D20 popup repositioned to mid-right<br>
+    ✦ Version tracking added
+  </div>
+</div>
+
+<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:12px 14px">
+  <div style="font-family:'Black Ops One',cursive;font-size:.65rem;color:rgba(255,255,255,.4);letter-spacing:2px;margin-bottom:6px">v1.4</div>
+  <div style="font-size:.55rem;color:rgba(255,255,255,.45);line-height:1.7">
+    ✦ Full deck builder with save slots<br>
+    ✦ Story mode — 8 Gym Leaders + Gary Oak<br>
+    ✦ 1v1 Pass &amp; Play PVP mode<br>
+    ✦ Profile page with stats and history<br>
+    ✦ Damage floating popups on cards<br>
+    ✦ D20 roll toast with result display<br>
+    ✦ Card collection viewer — all 151 Gen I Pokémon<br>
+    ✦ Trainer + Energy spell cards with target pickers<br>
+    ✦ Poké Strike signature moves<br>
+    ✦ CPU AI with deck and combat logic
+  </div>
+</div>
+
+</div>
+</div>
+
 </div>
 </div></div>
 
@@ -2020,7 +2072,7 @@ function goPage(id, btn) {
   });
   document.querySelectorAll('.nbtn').forEach(b => b.classList.remove('on'));
   const pg = document.getElementById('pg-' + id);
-  if (pg) { pg.classList.add('on'); pg.style.display = (id==='play'||id==='pvp') ? 'flex' : 'block'; }
+  if (pg) { pg.classList.add('on'); pg.style.display = (id==='play'||id==='pvp'||id==='home') ? 'flex' : 'block'; }
   if (btn) btn.classList.add('on');
   const inGame = (id === 'play');
   const onHome = (id === 'home');
