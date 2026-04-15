@@ -1181,6 +1181,7 @@ body.in-game{overflow:hidden;position:fixed;width:100%;height:100%}
       <div class="gtb-title">⚡ PLAY vs CPU</div>
       <div class="gtb-right">
         <span id="playElxLabel" class="gtb-elx">2⚡</span>
+        <button id="sfxToggleBtn" onclick="sfxToggle()" class="gtb-exit" style="padding:4px 8px;font-size:.8rem" title="Toggle Sound">🔊</button>
         <button onclick="pgInit()" class="gtb-exit">↩ Restart</button><button onclick="goPageBtn('home')" class="gtb-home">🏠</button>
       </div>
     </div>
@@ -2030,12 +2031,14 @@ function launchGame() {
   const sp = document.getElementById('startPopup');
   if (sp) sp.style.display = 'none';
   pgInit();
+  startChiptune();
 }
 function exitGame() {
   document.getElementById('endModal').classList.remove('on');
   document.body.classList.remove('in-game');
   const sp = document.getElementById('startPopup');
   if (sp) sp.style.display = 'flex';
+  stopChiptune();
   goPageBtn('home');
 }
 
@@ -2490,6 +2493,7 @@ let G = {};
 
 function pgInit() {
   STADIUM_BATTLE_ACTIVE = null;
+  stopChiptune(); startChiptune();
   // Player deck: use active player slot, fallback to default
   const p1slot = SAVED_PLAYER_DECKS[ACTIVE_PLAYER_SLOT];
   const p1cards = p1slot
@@ -3338,6 +3342,210 @@ function tutCheckEvent(event) {
   }
 }
 
+
+// ════════════════════════════════════════════════════
+// SOUND SYSTEM — Web Audio API + PokeAPI cries
+// ════════════════════════════════════════════════════
+var _audioCtx = null;
+var SFX_ON = (function(){ try{ return localStorage.getItem('paTCGSfx') !== '0'; }catch(e){ return true; } })();
+
+function getAudioCtx() {
+  if (!_audioCtx) {
+    try { _audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
+  }
+  // Resume if suspended (browser autoplay policy)
+  if (_audioCtx && _audioCtx.state === 'suspended') _audioCtx.resume();
+  return _audioCtx;
+}
+
+function sfxToggle() {
+  SFX_ON = !SFX_ON;
+  try { localStorage.setItem('paTCGSfx', SFX_ON ? '1' : '0'); } catch(e) {}
+  var btn = document.getElementById('sfxToggleBtn');
+  if (btn) btn.textContent = SFX_ON ? '🔊' : '🔇';
+  if (SFX_ON) sfxPlay('heal'); // confirm sound is on
+}
+
+// ── Core synth primitive ──────────────────────────────────────────────────
+function sfxTone(opts) {
+  if (!SFX_ON) return;
+  var ctx = getAudioCtx(); if (!ctx) return;
+  var now = ctx.currentTime;
+  var type   = opts.type   || 'square';
+  var freq   = opts.freq   || 440;
+  var freq2  = opts.freq2  || freq;
+  var vol    = opts.vol    || 0.18;
+  var attack = opts.attack || 0.005;
+  var decay  = opts.decay  || 0.08;
+  var dur    = opts.dur    || 0.15;
+  var freqEnd = opts.freqEnd || freq2;
+
+  var osc = ctx.createOscillator();
+  var gain = ctx.createGain();
+  // Optional filter for softer sounds
+  var dest = gain;
+  if (opts.filter) {
+    var filt = ctx.createBiquadFilter();
+    filt.type = opts.filter;
+    filt.frequency.value = opts.filterFreq || 800;
+    gain.connect(filt);
+    filt.connect(ctx.destination);
+    dest = gain;
+  } else {
+    gain.connect(ctx.destination);
+  }
+  osc.connect(gain);
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, now);
+  osc.frequency.linearRampToValueAtTime(freqEnd, now + dur);
+  gain.gain.setValueAtTime(0, now);
+  gain.gain.linearRampToValueAtTime(vol, now + attack);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + attack + dur);
+  osc.start(now);
+  osc.stop(now + attack + dur + 0.02);
+}
+
+function sfxNoise(vol, dur) {
+  if (!SFX_ON) return;
+  var ctx = getAudioCtx(); if (!ctx) return;
+  var bufSize = ctx.sampleRate * dur;
+  var buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+  var data = buf.getChannelData(0);
+  for (var i = 0; i < bufSize; i++) data[i] = (Math.random() * 2 - 1) * 0.3;
+  var src = ctx.createBufferSource();
+  src.buffer = buf;
+  var gain = ctx.createGain();
+  var filt = ctx.createBiquadFilter();
+  filt.type = 'bandpass';
+  filt.frequency.value = 400;
+  filt.Q.value = 0.5;
+  src.connect(filt);
+  filt.connect(gain);
+  gain.connect(ctx.destination);
+  gain.gain.setValueAtTime(vol, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+  src.start(ctx.currentTime);
+  src.stop(ctx.currentTime + dur);
+}
+
+// ── Named sound effects ───────────────────────────────────────────────────
+var _sfxDefs = {
+  // Subtle card place — very short low click
+  deploy: function() {
+    sfxTone({type:'sine', freq:160, freqEnd:80, vol:0.12, attack:0.004, dur:0.07});
+  },
+  // Dice — single quiet tick
+  roll: function() {
+    sfxNoise(0.05, 0.05);
+  },
+  // Hit — very short soft thud
+  hit: function() {
+    sfxTone({type:'sine', freq:140, freqEnd:60, vol:0.12, attack:0.003, dur:0.07});
+  },
+  // Super effective — two soft high tones
+  superEffective: function() {
+    sfxTone({type:'sine', freq:660, freqEnd:880, vol:0.13, attack:0.005, dur:0.09});
+    setTimeout(function(){ sfxTone({type:'sine', freq:880, vol:0.1, attack:0.003, dur:0.07}); }, 80);
+  },
+  // Not very effective — dull low tap
+  notEffective: function() {
+    sfxTone({type:'sine', freq:120, freqEnd:90, vol:0.08, attack:0.005, dur:0.1});
+  },
+  // No effect — nothing (silent is better)
+  noEffect: function() {},
+  // Poké Strike — two punchy tones, not over the top
+  pokeStrike: function() {
+    sfxTone({type:'sine', freq:330, freqEnd:660, vol:0.18, attack:0.005, dur:0.14});
+    setTimeout(function(){ sfxTone({type:'sine', freq:523, freqEnd:784, vol:0.14, attack:0.005, dur:0.18}); }, 110);
+  },
+  // Fainted — short descending sine
+  fainted: function() {
+    sfxTone({type:'sine', freq:330, freqEnd:110, vol:0.14, attack:0.008, dur:0.3});
+  },
+  // Heal — single soft rising chime
+  heal: function() {
+    sfxTone({type:'sine', freq:523, freqEnd:659, vol:0.12, attack:0.008, dur:0.14});
+  },
+  // Tower hit — short low thud
+  towerHit: function() {
+    sfxTone({type:'sine', freq:90, freqEnd:50, vol:0.15, attack:0.004, dur:0.12});
+  },
+  // Tower fires — barely audible tick
+  towerFire: function() {
+    sfxTone({type:'sine', freq:220, freqEnd:110, vol:0.07, attack:0.002, dur:0.06});
+  },
+  // End turn — single soft click
+  endTurn: function() {
+    sfxTone({type:'sine', freq:440, vol:0.09, attack:0.004, dur:0.07});
+  },
+  // Victory — simple 3-note ascending
+  victory: function() {
+    [523,659,784].forEach(function(f,i){
+      setTimeout(function(){ sfxTone({type:'sine', freq:f, vol:0.15, attack:0.008, dur:0.18}); }, i*150);
+    });
+  },
+  // Defeat — simple 3-note descending
+  defeat: function() {
+    [330,294,220].forEach(function(f,i){
+      setTimeout(function(){ sfxTone({type:'sine', freq:f, vol:0.12, attack:0.008, dur:0.18}); }, i*150);
+    });
+  },
+  // Spell/energy — soft shimmer
+  spell: function() {
+    sfxTone({type:'sine', freq:784, freqEnd:1047, vol:0.1, attack:0.006, dur:0.1});
+  },
+  // Miss — tiny whoosh
+  miss: function() {
+    sfxNoise(0.04, 0.07);
+  },
+};
+
+function sfxPlay(name) {
+  if (!SFX_ON) return;
+  var fn = _sfxDefs[name];
+  if (fn) { try { fn(); } catch(e) {} }
+}
+
+// ── Pokémon cry player ────────────────────────────────────────────────────
+var _cryCache = {};
+function playCry(pid) {
+  if (!SFX_ON || !pid) return;
+  var ctx = getAudioCtx(); if (!ctx) return;
+  var url = 'https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/' + pid + '.ogg';
+  if (_cryCache[pid] === null) return; // known 404
+  if (_cryCache[pid]) {
+    _playCryBuffer(ctx, _cryCache[pid]); return;
+  }
+  fetch(url)
+    .then(function(r){ return r.arrayBuffer(); })
+    .then(function(ab){ return ctx.decodeAudioData(ab); })
+    .then(function(buf){
+      _cryCache[pid] = buf;
+      _playCryBuffer(ctx, buf);
+    })
+    .catch(function(){ _cryCache[pid] = null; });
+}
+function _playCryBuffer(ctx, buf) {
+  var src = ctx.createBufferSource();
+  var gain = ctx.createGain();
+  gain.gain.value = 0.55;
+  src.buffer = buf;
+  src.connect(gain);
+  gain.connect(ctx.destination);
+  src.start(ctx.currentTime);
+}
+
+// ── Chiptune loop ─────────────────────────────────────────────────────────
+// Chiptune disabled — no background music
+function startChiptune() {}
+function stopChiptune() {}
+
+// Set sfx button state after DOM ready
+document.addEventListener('DOMContentLoaded', function(){
+  var btn = document.getElementById('sfxToggleBtn');
+  if (btn) btn.textContent = SFX_ON ? '🔊' : '🔇';
+});
+
 function gLogClear() { const el = document.getElementById('eventToast'); if(el) el.classList.remove('show'); }
 
 // ── D20 toast ─────────────────────────────────────
@@ -3668,6 +3876,8 @@ function pgDep(row, lane) {
   gLog('play', `⚡ You deploy ${card.name} → Lane ${lane.toUpperCase()}${row === 'x' ? ' (Neutral)' : ''}`);
   onDeploy(u, 'p1', lane);
   tutCheckEvent('deploy');
+  if (card.ptype === 'trainer' || card.ptype === 'energy') sfxPlay('spell');
+  else { sfxPlay('deploy'); setTimeout(function(){ playCry(card.pid); }, 80); }
   pgClearSel(); checkKills(); render(); checkWin();
 }
 function pgSpell(lane) {
@@ -3786,10 +3996,10 @@ function showSpellTargetPicker(sp, lane, mode, units) {
         gLog('play', `🔥 ${u.name} powered up! +2w next attack!`);
       } else if (nm==='WATER ENERGY') {
         const h=Math.min(u.w,2); u.w -= h; if(h>0) dmgPop(u._uid,h,'heal');
-        gLog('heal', `💧 ${u.name} healed 2w!`);
+        gLog('heal', `💧 ${u.name} healed 2w!`); sfxPlay('heal');
       } else if (nm==='GRASS ENERGY') {
         const h=Math.min(u.w,3); u.w -= h; if(h>0) dmgPop(u._uid,h,'heal');
-        gLog('heal', `🌿 ${u.name} healed 3w!`);
+        gLog('heal', `🌿 ${u.name} healed 3w!`); sfxPlay('heal');
       } else if (nm==='FIGHTING ENERGY') {
         u._xatk = (u._xatk||0) + 3;
         gLog('play', `🥊 ${u.name} powered up! +3w next attack!`);
@@ -3862,10 +4072,10 @@ function doTrainer(sp, lane, side) {
     const t = myAll[0]; if (t) { t._xatk = (t._xatk||0) + 2; gLog('play', `🔥 ${t.name} powered up! +2w next attack!`); }
   } else if (nm === 'WATER ENERGY') {
     const t = myAll.sort((a,b) => b.w - a.w)[0];
-    if (t) { const h=Math.min(t.w,2); t.w -= h; if(h>0) dmgPop(t._uid,h,'heal'); gLog('heal', `💧 ${t.name} healed 2w!`); }
+    if (t) { const h=Math.min(t.w,2); t.w -= h; if(h>0) dmgPop(t._uid,h,'heal'); gLog('heal', `💧 ${t.name} healed 2w!`); sfxPlay('heal'); }
   } else if (nm === 'GRASS ENERGY') {
     const t = myAll.sort((a,b) => b.w - a.w)[0];
-    if (t) { const h=Math.min(t.w,3); t.w -= h; if(h>0) dmgPop(t._uid,h,'heal'); gLog('heal', `🌿 ${t.name} healed 3w!`); }
+    if (t) { const h=Math.min(t.w,3); t.w -= h; if(h>0) dmgPop(t._uid,h,'heal'); gLog('heal', `🌿 ${t.name} healed 3w!`); sfxPlay('heal'); }
   } else if (nm === 'ELECTRIC ENERGY') {
     // Move most-back ally forward to neutral zone
     const allMy = allUnits(side,'a').concat(allUnits(side,'b'));
@@ -3971,6 +4181,7 @@ function onDeploy(u, side, lane) {
 function pgEndTurn() {
   if (G.phase !== 'player') return;
   tutCheckEvent('endturn');
+  sfxPlay('endTurn');
   gLog('turn', `--- End Turn ${G.turn} · Advancing ---`);
   advance('p1'); advance('p2');
   G.p1.elixir = Math.min(10, G.p1.elixir + 1);
@@ -4010,6 +4221,7 @@ function buildCQ() {
 function pgRoll() {
   if (G.phase !== 'combat') return;
   tutCheckEvent('roll');
+  sfxPlay('roll');
   // Skip dead items
   while (G.ci < G.cq.length) {
     const item = G.cq[G.ci];
@@ -4063,14 +4275,19 @@ function pgRoll() {
     if (typeMult !== 1) {
       wd = typeMult >= 2 ? Math.ceil(wd * 2) : typeMult === 0 ? 0 : Math.max(1, Math.floor(wd * 0.5));
       typeEffMsg = typeEffText(typeMult);
+    if (typeMult >= 2) setTimeout(function(){ sfxPlay('superEffective'); }, 150);
+    else if (typeMult === 0) setTimeout(function(){ sfxPlay('noEffect'); }, 150);
+    else if (typeMult < 1) setTimeout(function(){ sfxPlay('notEffective'); }, 150);
     }
   }
   showD20(who, roll, w, cs, typeEffMsg);
   gLog(cs ? 'cs' : w === 0 ? 'atk' : 'dmg', `${who} D20:${roll}${cs ? ' ⚡ POKÉ STRIKE!' : w === 0 ? ' MISS' : ' = ' + wd + 'w'}${typeEffMsg ? ' · ' + typeEffMsg : ''}`);
+  if (w === 0) sfxPlay('miss');
+  if (cs) sfxPlay('pokeStrike');
   if (targets.length) {
     const t = targets[0];
-    if (t._barrier > 0) { t._barrier--; wd = 0; gLog('atk', 'Barrier blocked!'); }
-    else { t.w += wd; if (wd > 0) dmgPop(t._uid, wd, 'dmg'); }
+    if (t._barrier > 0) { t._barrier--; wd = 0; gLog('atk', 'Barrier blocked!'); sfxPlay('noEffect'); }
+    else { t.w += wd; if (wd > 0) { dmgPop(t._uid, wd, 'dmg'); if(typeMult===1||!typeMult) sfxPlay('hit'); } }
     checkKills();
     if (cs) doCS(u, side, lane, en);
   } else if (canTower) {
@@ -4081,6 +4298,7 @@ function pgRoll() {
 }
 
 function hitTower(atSide, lane, wd) {
+  sfxPlay('towerHit');
   const en = atSide === 'p1' ? 'p2' : 'p1';
   const tw = lane === 'a' ? G[en].tA : G[en].tB;
   const enAny = G[en].tA.fallen || G[en].tB.fallen;
@@ -4166,6 +4384,7 @@ function checkKills() {
         dead.forEach(u => {
           gLog('die', `☠ ${u.name} fainted!`);
           faintPop(u, side);
+          sfxPlay('fainted');
           G.eliminated.push({ ...u, owner: side });
           const pas = u.passive || '';
           if (pas.startsWith('ON FAINT') || pas.startsWith('ON DEATH')) {
@@ -4210,6 +4429,7 @@ function doTowers() {
     const laneKey = lane.toUpperCase();
     const twTuid = 'tower-' + ownerSide + '-t' + laneKey;
     dmgPop(twTuid, 1, 'tower-out'); // pop on the tower that fired
+    sfxPlay('towerFire');
     gLog('tow', `${lbl} → 1w to ${tgts[0].name}`); checkKills();
   }
   gymFire(G.p2.tA, 'CPU Gym A', 'p1', 'a'); gymFire(G.p1.tA, 'Your Gym A', 'p2', 'a');
@@ -4332,6 +4552,7 @@ function checkWin() {
   }
 }
 function showEnd(win) {
+  setTimeout(function(){ sfxPlay(win ? 'victory' : 'defeat'); }, 100);
   const m = document.getElementById('endModal'); if (!m) return;
   document.getElementById('endTitle').textContent = win ? '🏆 VICTORY!' : '💀 DEFEATED';
   document.getElementById('endTitle').style.color = win ? 'var(--gold)' : 'var(--red)';
