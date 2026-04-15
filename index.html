@@ -909,6 +909,19 @@ body.in-game{overflow:hidden;position:fixed;width:100%;height:100%}
   gap:10px;flex-wrap:wrap;
 }
 .page-hdr h1{margin:0;flex:1;min-width:0}
+
+.stab.rock{color:#a78b6d}
+.stab.ice{color:#7dd3e8}
+.stab.dragon{color:#8b5cf6}
+.stab.physical{color:#ef4444}
+.stab.special{color:#a855f7}
+.stab.defender{color:#3b82f6}
+.stab.physical.on{background:#ef444430;border-color:#ef4444}
+.stab.special.on{background:#a855f730;border-color:#a855f7}
+.stab.defender.on{background:#3b82f630;border-color:#3b82f6}
+.stab.rock.on{background:#a78b6d30;border-color:#a78b6d}
+.stab.ice.on{background:#7dd3e830;border-color:#7dd3e8}
+.stab.dragon.on{background:#8b5cf630;border-color:#8b5cf6}
 </style>
 </head>
 <body>
@@ -1123,18 +1136,24 @@ body.in-game{overflow:hidden;position:fixed;width:100%;height:100%}
 <!-- ── Card Pool ── -->
 <div class="sec" style="--acc:var(--el);padding-bottom:10px">
   <div class="stabs" id="dbTabs" style="margin-bottom:8px;flex-wrap:wrap">
-    <button class="stab all on"   onclick="setDbType('all',this)">ALL</button>
-    <button class="stab fire"     onclick="setDbType('fire',this)">🔥</button>
-    <button class="stab water"    onclick="setDbType('water',this)">💧</button>
-    <button class="stab grass"    onclick="setDbType('grass',this)">🌿</button>
-    <button class="stab electric" onclick="setDbType('electric',this)">⚡</button>
-    <button class="stab psychic"  onclick="setDbType('psychic',this)">🔮</button>
-    <button class="stab fighting" onclick="setDbType('fighting',this)">🥊</button>
-    <button class="stab ghost"    onclick="setDbType('ghost',this)">👻</button>
-    <button class="stab poison"   onclick="setDbType('poison',this)">☠</button>
-    <button class="stab normal"   onclick="setDbType('normal',this)">⬜</button>
-    <button class="stab trainer"  onclick="setDbType('trainer',this)">🎒</button>
-    <button class="stab energy"   onclick="setDbType('energy',this)">⚡ Energy</button>
+    <button class="stab all on"       onclick="setDbType('all',this)">ALL</button>
+    <button class="stab physical"      onclick="setDbType('gtype:Physical',this)">⚔ Physical</button>
+    <button class="stab special"       onclick="setDbType('gtype:Special',this)">✨ Special</button>
+    <button class="stab defender"      onclick="setDbType('gtype:Defender',this)">🛡 Defender</button>
+    <button class="stab fire"          onclick="setDbType('fire',this)">🔥 Fire</button>
+    <button class="stab water"         onclick="setDbType('water',this)">💧 Water</button>
+    <button class="stab grass"         onclick="setDbType('grass',this)">🌿 Grass</button>
+    <button class="stab electric"      onclick="setDbType('electric',this)">⚡ Electric</button>
+    <button class="stab psychic"       onclick="setDbType('psychic',this)">🔮 Psychic</button>
+    <button class="stab fighting"      onclick="setDbType('fighting',this)">🥊 Fighting</button>
+    <button class="stab ghost"         onclick="setDbType('ghost',this)">👻 Ghost</button>
+    <button class="stab poison"        onclick="setDbType('poison',this)">☠ Poison</button>
+    <button class="stab normal"        onclick="setDbType('normal',this)">⬜ Normal</button>
+    <button class="stab rock"          onclick="setDbType('rock',this)">🪨 Rock</button>
+    <button class="stab ice"           onclick="setDbType('ice',this)">❄ Ice</button>
+    <button class="stab dragon"        onclick="setDbType('dragon',this)">🐲 Dragon</button>
+    <button class="stab trainer"       onclick="setDbType('trainer',this)">🎒 Trainer</button>
+    <button class="stab energy"        onclick="setDbType('energy',this)">⚡ Energy</button>
   </div>
   <div class="pm-grid" id="dbPool"></div>
 </div>
@@ -2280,7 +2299,13 @@ function renderDB() {
   const seen = new Set();
   CARDS
     .filter(c => { const k = c.pid || c.id; if (seen.has(k)) return false; seen.add(k); return true; })
-    .filter(c => dbType === 'all' || c.ptype === dbType || (dbType === 'trainer' && c.ptype === 'energy'))
+    .filter(c => {
+      if (dbType === 'all') return true;
+      if (dbType.startsWith('gtype:')) return c.gtype === dbType.slice(6);
+      if (dbType === 'trainer') return c.ptype === 'trainer' || c.ptype === 'energy';
+      if (dbType === 'energy') return c.ptype === 'energy';
+      return c.ptype === dbType;
+    })
     .forEach(c => {
       const cnt = deck.filter(x => x.id === c.id).length;
       const pm = document.createElement('div');
